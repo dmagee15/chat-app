@@ -202,3 +202,32 @@ span {
 	display: inline;
 	margin: 0;
 }
+.ChatApp{
+	width: 800px;
+	height: 600px;
+	margin:25px 0px 0px 0px;
+	padding:0;
+	background-color:red;
+	display:inline-block;
+	text-align: left;
+	overflow:hidden;
+}
+.nonInput{
+	width: 800px;
+	height: 550px;
+	margin: 0;
+	padding: 0;
+	background-color:green;
+	display:inline-block;
+	overflow:hidden;
+	
+}
+.ChatApp textarea{
+	width: 750px;
+	height: 44px;
+	margin: 0;
+	padding: 0;
+	display:inline-block;
+	resize: none;
+	vertical-align: top;
+}

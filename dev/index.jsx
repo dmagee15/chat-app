@@ -92,61 +92,6 @@ class App extends React.Component{
         }, function(){
             
             socket.emit('add', this.state.submit);
-            
-            
-        {/*    fetch('/retrievedata/'+this.state.submit, {method: 'get'}).then(function(data) {
-            return data.json();
-        }).then((j) =>{
-        
-        var totalSeries = [];
-        if(j==null){
-            this.setState({
-		    series: totalSeries,
-		    loaded: false
-		    });
-        }
-        else{
-            
-        var newArray;
-        var colors = ['red','green','blue','orange','purple'];
-        var colorCount = 0;
-        console.log(j);
-        
-        for(var propName in j) {
-            newArray = [];
-        if(j.hasOwnProperty(propName)) {
-            var propValue = j[propName];
-            console.log(propName);
-            console.log(propValue);
-        propValue.forEach(function(item) {
-            var val = [(new Date(item.date)).getTime(),item.open];
-			newArray.push(val);
-        });
-        
-        newArray = newArray.sort(function(a, b) {
-        return a[0] - b[0]; });
-        console.log(newArray);
-        var newSeries = {
-		        name: propName,
-		        data: newArray,
-		        color: colors[colorCount]
-		        };
-		 colorCount++;
-		 totalSeries.push(newSeries);
-		 console.log(totalSeries);
-        // do something with each element here
-         }
-        }
-        
-        this.setState({
-		    series: totalSeries,
-		    loaded: true
-		});
-        
-        }
-        
-		
-        }); */}
         
         
         });
@@ -174,128 +119,18 @@ class App extends React.Component{
     }
     
    render(){
-       var divStyle = {
-					margin:0,
-					padding:0,
-					width: '100%',
-					height: 400,
-					textAlign: 'center',
-					boxShadow: '0px 0px 4px 0px',
-					overflow: 'hidden'
-					};
-		var divLoadingStyle = {
-					margin:'auto',
-					padding:0,
-					width: '100%',
-					height: 500,
-					textAlign: 'center'
-					};
-		var divInputStyle = {
-		    textAlign: 'center',
-		    maxWidth: 1000,
-		    minWidth: 800,
-		    margin: 'auto'
-		};
-		var loadingStyle = {
-		    fontSize: 100,
-		    paddingTop:'0 0 0 0',
-		    margin: '100px 0 0 0'
-		};
-		var headingStyle = {
-		    textAlign:'center',
-		    width: '100%'
-		};
-		var projectInfoStyle = {
-		    display:'inline-block',
-		    width: '100%',
-		    padding: '50px 0 0 0',
-		    margin: 0,
-		    overflow: 'hidden',
-		    verticalAlign:'bottom'
-		};
-		var headingTextStyle = {
-		    fontFamily: 'Tahoma',
-		    fontWeight: 900,
-		    fontSize: 40
-		}
+
+            return (
+           <div style={{margin:0,padding:0,overflow:'hidden',textAlign:'center'}}>
+            <div className='ChatApp'>
+                <div className='nonInput'>
+                </div>
+                <textarea type="text" placeholder="Enter new message..." value={this.state.input} onChange={this.handleInput}/>
+            </div>
+
+          </div>
+          ); 
         
-        if(this.state.loaded && this.state.series.length != 0){
-            return (
-           <div style={{margin:0,padding:0,overflow:'hidden'}}>
-            <div style={headingStyle}>
-            <h1 style={headingTextStyle}>Chart the Stock Market</h1>
-            </div>
-            <div style={divStyle}>
-          <SampleChart container="chart" options={
-              {
-  chart: {
-            type: 'line'
-        },
-        rangeSelector: {
-            		selected: 3
-        		},
-        title: {
-            text: 'Stock Price'
-        },
-        yAxis: {
-            title: {
-                text: 'US Dollars'
-            }
-        },
-        series: this.state.series
-        }
-          }/>
-            </div>
-            <div style={divInputStyle}>
-          <InputSection input={this.state.input} handleInput={this.handleInput} handleSubmit={this.handleSubmit}/>
-          <StockListSection stocks={this.state.series} handleButtonDelete={this.handleButtonDelete}/>
-            </div>
-            <div style={projectInfoStyle}>
-                <ProjectInfo />
-            </div>
-          </div>
-          ); 
-        }
-        else if(this.state.noData && this.state.series.length==0 && this.state.loaded==true)
-            {
-            return (
-           <div style={{margin:0,padding:0,overflow:'hidden'}}>
-            <div style={headingStyle}>
-            <h1 style={headingTextStyle}>Chart the Stock Market</h1>
-            </div>
-            <div style={divStyle}>
-            <h1 style={loadingStyle}>No Data</h1>
-            </div>
-            <div style={divInputStyle}>
-            <InputSection input={this.state.input} handleInput={this.handleInput} handleSubmit={this.handleSubmit}/>
-            <StockListSection stocks={this.state.series} handleButtonDelete={this.handleButtonDelete}/>
-            </div>
-            <div style={projectInfoStyle}>
-                <ProjectInfo />
-            </div>
-          </div>
-          ); 
-        }
-        else    
-            {
-            return (
-           <div style={{margin:0,padding:0,overflow:'hidden'}}>
-            <div style={headingStyle}>
-            <h1 style={headingTextStyle}>Chart the Stock Market</h1>
-            </div>
-            <div style={divStyle}>
-            <h1 style={loadingStyle}>Loading</h1>
-            </div>
-            <div style={divInputStyle}>
-            <InputSection input={this.state.input} handleInput={this.handleInput} handleSubmit={this.handleSubmit}/>
-            <StockListSection stocks={this.state.series} handleButtonDelete={this.handleButtonDelete}/>
-            </div>
-            <div style={projectInfoStyle}>
-                <ProjectInfo />
-            </div>
-          </div>
-          ); 
-        }
 					
    }
       
