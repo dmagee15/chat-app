@@ -4732,7 +4732,7 @@ var App = function (_React$Component) {
             _this.setState({
                 submit: _this.state.input,
                 input: ''
-            }, _this.getNewLine);
+            }, _this.submitMessage);
         };
 
         _this.handleDeleteInput = function (event) {
@@ -4756,13 +4756,9 @@ var App = function (_React$Component) {
             }, _this.deleteStock);
         };
 
-        _this.getNewLine = function () {
-            _this.setState({
-                loaded: false
-            }, function () {
-
-                socket.emit('add', this.state.submit);
-            });
+        _this.submitMessage = function () {
+            console.log('submitmessage');
+            socket.emit('add', _this.state.submit);
         };
 
         _this.deleteStock = function () {
@@ -4785,7 +4781,7 @@ var App = function (_React$Component) {
         };
 
         _this.state = {
-            series: [],
+            messagedata: null,
             loaded: false,
             input: '',
             submit: '',
@@ -4803,29 +4799,34 @@ var App = function (_React$Component) {
 
             socket.on('update', function (j) {
 
-                _this2.setState({
-                    series: [],
-                    loaded: false
-                }, function () {
-
-                    if (j != null) {
-                        _this2.setState({
-                            series: j,
-                            loaded: true,
-                            noData: j.length == 0
-                        });
-                    } else {
-                        _this2.setState({
-                            loaded: true,
-                            noData: true
-                        });
-                    }
-                });
+                if (j != null) {
+                    _this2.setState({
+                        messagedata: j,
+                        loaded: true,
+                        noData: j.length == 0
+                    });
+                } else {
+                    _this2.setState({
+                        loaded: true,
+                        noData: true
+                    });
+                }
             });
         }
     }, {
         key: "render",
         value: function render() {
+            console.log(this.state.messagedata);
+            var display = null;
+            if (this.state.messagedata != null) {
+                var display = this.state.messagedata.map(function (message, index) {
+                    return _react2.default.createElement(
+                        "p",
+                        { key: index },
+                        message
+                    );
+                });
+            }
 
             return _react2.default.createElement(
                 "div",
@@ -4833,8 +4834,21 @@ var App = function (_React$Component) {
                 _react2.default.createElement(
                     "div",
                     { className: "ChatApp" },
-                    _react2.default.createElement("div", { className: "nonInput" }),
-                    _react2.default.createElement("textarea", { type: "text", placeholder: "Enter new message...", value: this.state.input, onChange: this.handleInput })
+                    _react2.default.createElement(
+                        "div",
+                        { className: "nonInput" },
+                        display
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "inputSection" },
+                        _react2.default.createElement("textarea", { type: "text", placeholder: "Enter new message...", value: this.state.input, onChange: this.handleInput }),
+                        _react2.default.createElement(
+                            "button",
+                            { onClick: this.handleSubmit },
+                            "Submit"
+                        )
+                    )
                 )
             );
         }

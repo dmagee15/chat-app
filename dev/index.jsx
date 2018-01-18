@@ -11,7 +11,7 @@ class App extends React.Component{
     constructor(props) {
     super(props);
     this.state = {
-        series: [],
+        messagedata: null,
         loaded: false,
         input: '',
         submit: '',
@@ -25,15 +25,10 @@ class App extends React.Component{
         
         
         socket.on('update', (j) => {
-
-        this.setState({
-		    series: [],
-		    loaded: false
-		    }, () => {
 		        
 		        if(j!=null){
 		            this.setState({
-                    series: j,
+                    messagedata: j,
                     loaded: true,
                     noData: (j.length==0)
                     });
@@ -45,7 +40,7 @@ class App extends React.Component{
                     });
 		        }
 		        
-		    });
+
         
             
         });
@@ -62,7 +57,7 @@ class App extends React.Component{
         this.setState({
             submit: this.state.input,
             input: ''
-        }, this.getNewLine);
+        }, this.submitMessage);
     }
     
     handleDeleteInput = (event) => {
@@ -86,16 +81,9 @@ class App extends React.Component{
         }, this.deleteStock);
     }
     
-    getNewLine = () => {
-        this.setState({
-            loaded: false
-        }, function(){
-            
+    submitMessage = () => {
+            console.log('submitmessage');
             socket.emit('add', this.state.submit);
-        
-        
-        });
-        
     }
     
     deleteStock = () => {
@@ -119,13 +107,25 @@ class App extends React.Component{
     }
     
    render(){
+            console.log(this.state.messagedata);
+            var display = null;
+            if(this.state.messagedata!=null){
+                var display = this.state.messagedata.map((message,index) => 
+                <p key={index}>{message}</p>
+                );
+            }
 
             return (
            <div style={{margin:0,padding:0,overflow:'hidden',textAlign:'center'}}>
             <div className='ChatApp'>
                 <div className='nonInput'>
+                    {display}
                 </div>
-                <textarea type="text" placeholder="Enter new message..." value={this.state.input} onChange={this.handleInput}/>
+                <div className='inputSection'>
+                    <textarea type="text" placeholder="Enter new message..." value={this.state.input} onChange={this.handleInput}/>
+                    <button onClick={this.handleSubmit}>Submit</button>
+                </div>
+                
             </div>
 
           </div>

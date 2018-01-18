@@ -211,23 +211,35 @@ span {
 	display:inline-block;
 	text-align: left;
 	overflow:hidden;
+	border: 1px solid gray;
 }
 .nonInput{
 	width: 800px;
-	height: 550px;
+	height: 560px;
 	margin: 0;
 	padding: 0;
-	background-color:green;
-	display:inline-block;
+	background-color:white;
 	overflow:hidden;
 	
 }
-.ChatApp textarea{
-	width: 750px;
-	height: 44px;
+.inputSection{
+	width: 800px;
+	height: 40px;
+	margin: 0;
+	padding: 0;
+	overflow:hidden;
+}
+.inputSection textarea{
+	width: 725px;
+	height: 38px;
 	margin: 0;
 	padding: 0;
 	display:inline-block;
 	resize: none;
 	vertical-align: top;
+}
+.inputSection button{
+	height: 40px;
+	width: 73px;
+	display:inline-block;
 }
