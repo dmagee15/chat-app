@@ -211,16 +211,15 @@ span {
 	display:inline-block;
 	text-align: left;
 	overflow:hidden;
-	border: 1px solid gray;
 }
 .nonInput{
-	width: 800px;
-	height: 560px;
+	width: 798px;
+	height: 559px;
 	margin: 0;
 	padding: 0;
 	background-color:white;
-	overflow:hidden;
-	
+	border: 1px solid gray;
+	border-bottom: none;
 }
 .inputSection{
 	width: 800px;
@@ -242,4 +241,127 @@ span {
 	height: 40px;
 	width: 73px;
 	display:inline-block;
+}
+.messages{
+	width: 80%;
+	height: 100%;
+	overflow-y:scroll;
+	display:inline-block;
+}
+.options{
+	width: 20%;
+	height: 100%;
+	background-color:red;
+	display:inline-block;
+	overflow:hidden;
+}
+.login{
+	width: 100%;
+	height: 149px;
+	background-color:white;
+	padding: 0;
+	margin: 0;
+	border-bottom:1px solid black;
+}
+.loginBody{
+	width: 100%;
+	height: 100%;
+}
+.loginBody input{
+	padding:0px 0px 0px 10px;
+	margin: 15px 0 0 0;
+	width: 80%;
+	height:30px;
+	border: 1px solid gray;
+	border-radius: 2px;
+	font-size: 14px;
+	display:inline-block;
+}
+.loginButtonContainer{
+	width:100%;
+	height: 50px;
+	margin: 15px 0px 0px 0px;
+	text-align: center;
+}
+.loginButton{
+	display:inline-block;
+        height: 25px;
+        background-color: lightblue;
+        margin: 0px 5px 0px 0px;
+        padding: 5px 10px 5px 10px;
+        font-size: 14px;
+		font-family: Tahoma;
+		border-radius: 5px;
+		box-shadow:none;
+		font-weight: 900;
+		color: black;
+		border: 1px solid black;
+}
+.signupButton{
+	display:inline-block;
+        height: 25px;
+        background-color: white;
+        margin: 0px 5px 0px 0px;
+        padding: 5px 10px 5px 10px;
+        font-size: 14px;
+		font-family: Tahoma;
+		border-radius: 5px;
+		box-shadow:none;
+		font-weight: 900;
+		color: black;
+		border:1px solid black;
+}
+.roomControl{
+	height: 559px;
+	width: 100%;
+	background-color:orange;
+}
+.roomControlBody{
+	height: 100%;
+	width: 100%;
+	
+}
+.searchContainer{
+	width: 100%;
+	height: 100px;
+	background-color: white;
+	text-align:center;
+}
+.searchContainer input{
+	margin: 12px 0 0 0;
+		    padding-left: 5px;
+		    height: 30px;
+		    width: 80%;
+		    display:inline-block;
+		    overflow: hidden;
+		    
+}
+.roomList{
+	width: 100%;
+	height: 309px;
+	background-color:black;
+}
+.List{
+	height: 259px;
+	width: 100%;
+	
+}
+.roomListButtonContainer{
+	width: 100%;
+	height: 50px;
+	background-color:blue;
+}
+.joinButton{
+	display:inline-block;
+        height: 25px;
+        background-color: white;
+        margin: 14px 5px 0px 10px;
+        padding: 5px 10px 5px 10px;
+        font-size: 14px;
+		font-family: Tahoma;
+		border-radius: 5px;
+		box-shadow:none;
+		font-weight: 900;
+		color: black;
+		border:1px solid black;
 }

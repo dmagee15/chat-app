@@ -4758,7 +4758,11 @@ var App = function (_React$Component) {
 
         _this.submitMessage = function () {
             console.log('submitmessage');
-            socket.emit('add', _this.state.submit);
+            var result = {
+                username: _this.state.username,
+                message: _this.state.submit
+            };
+            socket.emit('add', result);
         };
 
         _this.deleteStock = function () {
@@ -4787,7 +4791,9 @@ var App = function (_React$Component) {
             submit: '',
             deleteinput: '',
             deletesubmit: '',
-            noData: false
+            noData: false,
+            username: null,
+            logged: false
         };
         return _this;
     }
@@ -4799,11 +4805,14 @@ var App = function (_React$Component) {
 
             socket.on('update', function (j) {
 
-                if (j != null) {
+                if (j.messages != null) {
                     _this2.setState({
-                        messagedata: j,
+                        messagedata: j.messages,
+                        username: j.username,
                         loaded: true,
                         noData: j.length == 0
+                    }, function () {
+                        $(".messages").scrollTop($(".messages")[0].scrollHeight);
                     });
                 } else {
                     _this2.setState({
@@ -4816,14 +4825,16 @@ var App = function (_React$Component) {
     }, {
         key: "render",
         value: function render() {
-            console.log(this.state.messagedata);
+            console.log;
             var display = null;
             if (this.state.messagedata != null) {
                 var display = this.state.messagedata.map(function (message, index) {
                     return _react2.default.createElement(
                         "p",
                         { key: index },
-                        message
+                        message.username,
+                        ": ",
+                        message.message
                     );
                 });
             }
@@ -4837,7 +4848,25 @@ var App = function (_React$Component) {
                     _react2.default.createElement(
                         "div",
                         { className: "nonInput" },
-                        display
+                        _react2.default.createElement(
+                            "div",
+                            { className: "messages" },
+                            display
+                        ),
+                        _react2.default.createElement(
+                            "div",
+                            { className: "options" },
+                            _react2.default.createElement(
+                                "div",
+                                { className: "login" },
+                                _react2.default.createElement(Login, null)
+                            ),
+                            _react2.default.createElement(
+                                "div",
+                                { className: "roomControl" },
+                                _react2.default.createElement(RoomControl, null)
+                            )
+                        )
                     ),
                     _react2.default.createElement(
                         "div",
@@ -4857,53 +4886,154 @@ var App = function (_React$Component) {
     return App;
 }(_react2.default.Component);
 
-var StockListSection = function (_React$Component2) {
-    _inherits(StockListSection, _React$Component2);
+var Login = function (_React$Component2) {
+    _inherits(Login, _React$Component2);
 
-    function StockListSection(props) {
-        _classCallCheck(this, StockListSection);
+    function Login(props) {
+        _classCallCheck(this, Login);
 
-        return _possibleConstructorReturn(this, (StockListSection.__proto__ || Object.getPrototypeOf(StockListSection)).call(this, props));
+        var _this3 = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this, props));
+
+        _this3.handleUsernameChange = function (event) {
+            _this3.setState({
+                usernameInput: event.target.value
+            });
+        };
+
+        _this3.handlePasswordChange = function (event) {
+            _this3.setState({
+                passwordInput: event.target.value
+            });
+        };
+
+        _this3.state = {
+            usernameInput: '',
+            passwordInput: ''
+        };
+        return _this3;
     }
 
-    _createClass(StockListSection, [{
+    _createClass(Login, [{
         key: "render",
         value: function render() {
-            var _this4 = this;
-
-            var StockListSectionStyle = {
-                maxWidth: 800,
-                margin: '50px auto 0 auto',
-                textAlign: 'left',
-                display: 'inline-block',
-                minWidth: 600,
-                float: 'right',
-                borderLeft: '2px solid #E8E8E8'
-            };
-
-            var array = this.props.stocks;
-            var length = array.length;
-            var result = [];
-            for (var x = 0; x < length; x++) {
-                var temp = this.props.stocks[x];
-                result.push(_react2.default.createElement(StockBox, { stockInfo: temp, key: x }));
-            }
 
             return _react2.default.createElement(
                 "div",
-                { style: StockListSectionStyle },
-                this.props.stocks.map(function (stock, index) {
-                    return _react2.default.createElement(StockBox, { stockInfo: stock, index: index, key: index, handleButtonDelete: _this4.props.handleButtonDelete });
-                })
+                { className: "loginBody" },
+                _react2.default.createElement("input", { type: "text", placeholder: "Username", value: this.state.usernameInput, onChange: this.handleUsernameChange }),
+                _react2.default.createElement("input", { type: "text", placeholder: "Password", value: this.state.passwordInput, onChange: this.handlePasswordChange }),
+                _react2.default.createElement(
+                    "div",
+                    { className: "loginButtonContainer" },
+                    _react2.default.createElement(
+                        "button",
+                        { className: "loginButton" },
+                        "Login"
+                    ),
+                    _react2.default.createElement(
+                        "button",
+                        { className: "signupButton" },
+                        "SignUp"
+                    )
+                )
             );
         }
     }]);
 
-    return StockListSection;
+    return Login;
 }(_react2.default.Component);
 
-var StockBox = function (_React$Component3) {
-    _inherits(StockBox, _React$Component3);
+var RoomControl = function (_React$Component3) {
+    _inherits(RoomControl, _React$Component3);
+
+    function RoomControl(props) {
+        _classCallCheck(this, RoomControl);
+
+        var _this4 = _possibleConstructorReturn(this, (RoomControl.__proto__ || Object.getPrototypeOf(RoomControl)).call(this, props));
+
+        _this4.handleUsernameChange = function (event) {
+            _this4.setState({
+                usernameInput: event.target.value
+            });
+        };
+
+        _this4.handlePasswordChange = function (event) {
+            _this4.setState({
+                passwordInput: event.target.value
+            });
+        };
+
+        _this4.handleSearchInputChange = function (event) {
+            _this4.setState({
+                searchInput: event.target.value
+            });
+        };
+
+        _this4.handleSearchKeyPress = function (event) {
+            if (event.key == 'Enter') {
+                _this4.submitSearch();
+            }
+        };
+
+        _this4.submitSearch = function () {};
+
+        _this4.state = {
+            usernameInput: '',
+            passwordInput: '',
+            searchInput: ''
+        };
+        return _this4;
+    }
+
+    _createClass(RoomControl, [{
+        key: "render",
+        value: function render() {
+
+            return _react2.default.createElement(
+                "div",
+                { className: "roomControlBody" },
+                _react2.default.createElement(
+                    "div",
+                    { className: "searchContainer" },
+                    _react2.default.createElement("input", { type: "text", placeholder: "Search Rooms...", onChange: this.handleSearchInputChange, onKeyPress: this.handleSearchKeyPress, value: this.state.searchInput }),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "loginButtonContainer" },
+                        _react2.default.createElement(
+                            "button",
+                            { className: "signupButton" },
+                            "Search"
+                        ),
+                        _react2.default.createElement(
+                            "button",
+                            { className: "signupButton" },
+                            "New"
+                        )
+                    )
+                ),
+                _react2.default.createElement(
+                    "div",
+                    { className: "roomList" },
+                    _react2.default.createElement("div", { className: "List" }),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "roomListButtonContainer" },
+                        _react2.default.createElement(
+                            "button",
+                            { className: "joinButton" },
+                            "Join"
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return RoomControl;
+}(_react2.default.Component);
+
+var StockBox = function (_React$Component4) {
+    _inherits(StockBox, _React$Component4);
 
     function StockBox(props) {
         _classCallCheck(this, StockBox);
@@ -4980,8 +5110,8 @@ var StockBox = function (_React$Component3) {
     return StockBox;
 }(_react2.default.Component);
 
-var InputSection = function (_React$Component4) {
-    _inherits(InputSection, _React$Component4);
+var InputSection = function (_React$Component5) {
+    _inherits(InputSection, _React$Component5);
 
     function InputSection(props) {
         _classCallCheck(this, InputSection);
@@ -5049,8 +5179,8 @@ var InputSection = function (_React$Component4) {
     return InputSection;
 }(_react2.default.Component);
 
-var DeleteSection = function (_React$Component5) {
-    _inherits(DeleteSection, _React$Component5);
+var DeleteSection = function (_React$Component6) {
+    _inherits(DeleteSection, _React$Component6);
 
     function DeleteSection(props) {
         _classCallCheck(this, DeleteSection);
@@ -5082,8 +5212,8 @@ var DeleteSection = function (_React$Component5) {
     return DeleteSection;
 }(_react2.default.Component);
 
-var SampleChart = function (_React$Component6) {
-    _inherits(SampleChart, _React$Component6);
+var SampleChart = function (_React$Component7) {
+    _inherits(SampleChart, _React$Component7);
 
     function SampleChart() {
         _classCallCheck(this, SampleChart);
@@ -5123,8 +5253,8 @@ var SampleChart = function (_React$Component6) {
     return SampleChart;
 }(_react2.default.Component);
 
-var ProjectInfo = function (_React$Component7) {
-    _inherits(ProjectInfo, _React$Component7);
+var ProjectInfo = function (_React$Component8) {
+    _inherits(ProjectInfo, _React$Component8);
 
     function ProjectInfo(props) {
         _classCallCheck(this, ProjectInfo);

@@ -17,7 +17,9 @@ class App extends React.Component{
         submit: '',
         deleteinput: '',
         deletesubmit: '',
-        noData: false
+        noData: false,
+        username: null,
+        logged: false,
         };
     }
     
@@ -26,12 +28,13 @@ class App extends React.Component{
         
         socket.on('update', (j) => {
 		        
-		        if(j!=null){
+		        if(j.messages!=null){
 		            this.setState({
-                    messagedata: j,
+                    messagedata: j.messages,
+                    username: j.username,
                     loaded: true,
                     noData: (j.length==0)
-                    });
+                    }, function(){$(".messages").scrollTop($(".messages")[0].scrollHeight);});
 		        }
 		        else{
 		            this.setState({
@@ -83,7 +86,11 @@ class App extends React.Component{
     
     submitMessage = () => {
             console.log('submitmessage');
-            socket.emit('add', this.state.submit);
+            var result = {
+                username: this.state.username,
+                message: this.state.submit
+            }
+            socket.emit('add', result);
     }
     
     deleteStock = () => {
@@ -107,11 +114,11 @@ class App extends React.Component{
     }
     
    render(){
-            console.log(this.state.messagedata);
+            console.log
             var display = null;
             if(this.state.messagedata!=null){
                 var display = this.state.messagedata.map((message,index) => 
-                <p key={index}>{message}</p>
+                <p key={index}>{message.username}: {message.message}</p>
                 );
             }
 
@@ -119,7 +126,17 @@ class App extends React.Component{
            <div style={{margin:0,padding:0,overflow:'hidden',textAlign:'center'}}>
             <div className='ChatApp'>
                 <div className='nonInput'>
-                    {display}
+                    <div className='messages'>
+                        {display}
+                    </div>
+                    <div className='options'>
+                        <div className='login'>
+                            <Login/>
+                        </div>
+                        <div className='roomControl'>
+                            <RoomControl/>
+                        </div>
+                    </div>
                 </div>
                 <div className='inputSection'>
                     <textarea type="text" placeholder="Enter new message..." value={this.state.input} onChange={this.handleInput}/>
@@ -137,34 +154,89 @@ class App extends React.Component{
    
 }
 
-class StockListSection extends React.Component{
+class Login extends React.Component{
     constructor(props){
         super(props);
+    this.state = {
+        usernameInput: '',
+        passwordInput: ''
+    }
+    }
+    handleUsernameChange = (event) =>{
+        this.setState({
+            usernameInput: event.target.value
+        });
+    }
+    handlePasswordChange = (event) =>{
+        this.setState({
+            passwordInput: event.target.value
+        });
     }
     render(){
-        var StockListSectionStyle = {
-            maxWidth: 800,
-            margin: '50px auto 0 auto',
-            textAlign: 'left',
-            display:'inline-block',
-            minWidth: 600,
-            float: 'right',
-            borderLeft: '2px solid #E8E8E8',
-        };
-        
-        var array = this.props.stocks;
-        var length = array.length;
-        var result = [];
-        for(var x=0;x<length;x++){
-            var temp = this.props.stocks[x];
-            result.push(<StockBox stockInfo={temp} key={x}/>);
-        }
         
         return(
-            <div style={StockListSectionStyle}>
-                {this.props.stocks.map((stock, index) =>
-                    <StockBox stockInfo={stock} index={index} key={index} handleButtonDelete={this.props.handleButtonDelete}/>
-                )}
+            <div className='loginBody'>
+                <input type="text" placeholder="Username" value={this.state.usernameInput} onChange={this.handleUsernameChange}/>
+                <input type="text" placeholder="Password" value={this.state.passwordInput} onChange={this.handlePasswordChange}/>
+                <div className='loginButtonContainer'>
+                    <button className='loginButton'>Login</button>
+                    <button className='signupButton'>SignUp</button>
+                </div>
+            </div>
+            );
+    }
+}
+
+class RoomControl extends React.Component{
+    constructor(props){
+        super(props);
+    this.state = {
+        usernameInput: '',
+        passwordInput: '',
+        searchInput: '',
+    }
+    }
+    handleUsernameChange = (event) =>{
+        this.setState({
+            usernameInput: event.target.value
+        });
+    }
+    handlePasswordChange = (event) =>{
+        this.setState({
+            passwordInput: event.target.value
+        });
+    }
+    handleSearchInputChange = (event) => {
+            this.setState({
+            searchInput: event.target.value
+            });
+    }
+    handleSearchKeyPress = (event) => {
+        if(event.key=='Enter'){
+            this.submitSearch();
+        }
+    }
+    submitSearch = () => {
+
+    }
+    render(){
+        
+        return(
+            <div className='roomControlBody'>
+                <div className='searchContainer'>
+                    <input type="text" placeholder="Search Rooms..." onChange={this.handleSearchInputChange} onKeyPress={this.handleSearchKeyPress} value={this.state.searchInput}/>
+                    <div className='loginButtonContainer'>
+                        <button className='signupButton'>Search</button>
+                        <button className='signupButton'>New</button>
+                </div>
+                </div>
+                <div className='roomList'>
+                    <div className='List'>
+                    </div>
+                    <div className='roomListButtonContainer'>
+                        <button className='joinButton'>Join</button>
+                    </div>
+                </div>
             </div>
             );
     }

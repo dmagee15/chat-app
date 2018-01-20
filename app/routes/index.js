@@ -7,6 +7,7 @@ module.exports = function (app, yahooFinance, io) {
 	
 	io.on('connection', function(client){
     console.log("IO CLIENT CONNECTED");
+//    Room.find({}).remove().exec();
     Room
 				.find({}, function (err, result) {
 				if (err) { throw err; }
@@ -20,18 +21,26 @@ module.exports = function (app, yahooFinance, io) {
 					Room.findOne({'name':'main'}, function(err,roommessages){
 						if(err) throw err;
 						console.log(JSON.stringify(roommessages));
-						io.sockets.emit('update', roommessages.messages);
+						var guestName = "Guest"+Math.floor(Math.random()*10000);
+						var result = {
+							username: guestName,
+							messages: roommessages.messages
+						}
+						io.sockets.emit('update', result);
 					});
 				}
 			});
     
-	client.on('add', function(data){
-		console.log(data);
+	client.on('add', function(messagedata){
+
         Room
-			.findOneAndUpdate({'name':'main'},{$push: {messages: data}},{new:true}, function(err,roommessages){
+			.findOneAndUpdate({'name':'main'},{$push: {messages: messagedata}},{new:true}, function(err,roommessages){
 				if (err) { throw err; }
-					console.log(JSON.stringify(roommessages));
-					io.sockets.emit('update', roommessages.messages);
+					var result = {
+						username: messagedata.username,
+						messages: roommessages.messages
+					}
+					io.sockets.emit('update', result);
 			});
 		
 		
