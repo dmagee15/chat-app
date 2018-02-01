@@ -232,6 +232,9 @@ class RoomControl extends React.Component{
                 </div>
                 <div className='roomList'>
                     <div className='List'>
+                        <div className='roomElement'>
+                            <p>Room One</p>
+                        </div>
                     </div>
                     <div className='roomListButtonContainer'>
                         <button className='joinButton'>Join</button>
