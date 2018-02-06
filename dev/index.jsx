@@ -20,6 +20,7 @@ class App extends React.Component{
         noData: false,
         username: null,
         logged: false,
+        newRoomWindow: false
         };
     }
     
@@ -49,7 +50,9 @@ class App extends React.Component{
         });
         
     }
-    
+    newRoomWindowHandler = () =>{
+        this.setState({newRoomWindow:!this.state.newRoomWindow});
+    }
     handleInput = (event) => {
         this.setState({
             input: event.target.value
@@ -134,7 +137,7 @@ class App extends React.Component{
                             <Login/>
                         </div>
                         <div className='roomControl'>
-                            <RoomControl/>
+                            <RoomControl newRoomWindowHandler={this.newRoomWindowHandler}/>
                         </div>
                     </div>
                 </div>
@@ -142,9 +145,9 @@ class App extends React.Component{
                     <textarea type="text" placeholder="Enter new message..." value={this.state.input} onChange={this.handleInput}/>
                     <button onClick={this.handleSubmit}>Submit</button>
                 </div>
-                
+                <NewRoom newRoomWindow={this.state.newRoomWindow} newRoomWindowHandler={this.newRoomWindowHandler}/>
             </div>
-
+            
           </div>
           ); 
         
@@ -227,7 +230,7 @@ class RoomControl extends React.Component{
                     <input type="text" placeholder="Search Rooms..." onChange={this.handleSearchInputChange} onKeyPress={this.handleSearchKeyPress} value={this.state.searchInput}/>
                     <div className='loginButtonContainer'>
                         <button className='signupButton'>Search</button>
-                        <button className='signupButton'>New</button>
+                        <button className='signupButton' onClick={this.props.newRoomWindowHandler}>New</button>
                 </div>
                 </div>
                 <div className='roomList'>
@@ -392,6 +395,39 @@ class SampleChart extends React.Component{
     }
       
    
+}
+
+class NewRoom extends React.Component{
+    constructor(props) {
+    super(props);
+    this.state = {
+        nameInput: '',
+        }
+    }
+    handleNameChange = (event) =>{
+        this.setState({
+            nameInput: event.target.value
+        });
+    }
+    render(){
+        if(this.props.newRoomWindow==false){
+            return null;
+        }
+            return (
+               <div className="modal">
+                    <div className="xButtonContainer">
+                    <button onClick={this.props.newRoomWindowHandler}>X</button>
+                    </div>
+                    <div>
+                        <input className="modalInput" type="text" placeholder="Name of New Room" value={this.state.nameInput} onChange={this.handleNameChange}/>
+                    </div>
+                    <div>
+                        <button className="modalSubmitButton" onClick={this.handleSubmit}>Submit</button>
+                    </div>
+            </div>
+          ); 
+					
+   }
 }
 
 class ProjectInfo extends React.Component{

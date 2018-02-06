@@ -4722,6 +4722,10 @@ var App = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
+        _this.newRoomWindowHandler = function () {
+            _this.setState({ newRoomWindow: !_this.state.newRoomWindow });
+        };
+
         _this.handleInput = function (event) {
             _this.setState({
                 input: event.target.value
@@ -4793,7 +4797,8 @@ var App = function (_React$Component) {
             deletesubmit: '',
             noData: false,
             username: null,
-            logged: false
+            logged: false,
+            newRoomWindow: false
         };
         return _this;
     }
@@ -4864,7 +4869,7 @@ var App = function (_React$Component) {
                             _react2.default.createElement(
                                 "div",
                                 { className: "roomControl" },
-                                _react2.default.createElement(RoomControl, null)
+                                _react2.default.createElement(RoomControl, { newRoomWindowHandler: this.newRoomWindowHandler })
                             )
                         )
                     ),
@@ -4877,7 +4882,8 @@ var App = function (_React$Component) {
                             { onClick: this.handleSubmit },
                             "Submit"
                         )
-                    )
+                    ),
+                    _react2.default.createElement(NewRoom, { newRoomWindow: this.state.newRoomWindow, newRoomWindowHandler: this.newRoomWindowHandler })
                 )
             );
         }
@@ -5006,7 +5012,7 @@ var RoomControl = function (_React$Component3) {
                         ),
                         _react2.default.createElement(
                             "button",
-                            { className: "signupButton" },
+                            { className: "signupButton", onClick: this.props.newRoomWindowHandler },
                             "New"
                         )
                     )
@@ -5265,8 +5271,67 @@ var SampleChart = function (_React$Component7) {
     return SampleChart;
 }(_react2.default.Component);
 
-var ProjectInfo = function (_React$Component8) {
-    _inherits(ProjectInfo, _React$Component8);
+var NewRoom = function (_React$Component8) {
+    _inherits(NewRoom, _React$Component8);
+
+    function NewRoom(props) {
+        _classCallCheck(this, NewRoom);
+
+        var _this9 = _possibleConstructorReturn(this, (NewRoom.__proto__ || Object.getPrototypeOf(NewRoom)).call(this, props));
+
+        _this9.handleNameChange = function (event) {
+            _this9.setState({
+                nameInput: event.target.value
+            });
+        };
+
+        _this9.state = {
+            nameInput: ''
+        };
+        return _this9;
+    }
+
+    _createClass(NewRoom, [{
+        key: "render",
+        value: function render() {
+            if (this.props.newRoomWindow == false) {
+                return null;
+            }
+            return _react2.default.createElement(
+                "div",
+                { className: "modal" },
+                _react2.default.createElement(
+                    "div",
+                    { className: "xButtonContainer" },
+                    _react2.default.createElement(
+                        "button",
+                        { onClick: this.props.newRoomWindowHandler },
+                        "X"
+                    )
+                ),
+                _react2.default.createElement(
+                    "div",
+                    null,
+                    _react2.default.createElement("input", { className: "modalInput", type: "text", placeholder: "Name of New Room", value: this.state.nameInput, onChange: this.handleNameChange })
+                ),
+                _react2.default.createElement(
+                    "div",
+                    null,
+                    _react2.default.createElement(
+                        "button",
+                        { className: "modalSubmitButton", onClick: this.handleSubmit },
+                        "Submit"
+                    )
+                )
+            );
+        }
+    }]);
+
+    return NewRoom;
+}(_react2.default.Component);
+
+var ProjectInfo = function (_React$Component9) {
+    _inherits(ProjectInfo, _React$Component9);
 
     function ProjectInfo(props) {
         _classCallCheck(this, ProjectInfo);
