@@ -18,13 +18,13 @@ module.exports = function (app, yahooFinance, io) {
 					newRoom.save();
 				}
 				else{
-					Room.findOne({'name':'main'}, function(err,roommessages){
+					Room.findOne({'name':'main'}, function(err,mainroom){
 						if(err) throw err;
-						console.log(JSON.stringify(roommessages));
+						console.log(JSON.stringify(mainroom));
 						var guestName = "Guest"+Math.floor(Math.random()*10000);
 						var result = {
 							username: guestName,
-							messages: roommessages.messages
+							messages: mainroom.messages
 						}
 						io.sockets.emit('update', result);
 					});
@@ -34,11 +34,11 @@ module.exports = function (app, yahooFinance, io) {
 	client.on('add', function(messagedata){
 
         Room
-			.findOneAndUpdate({'name':'main'},{$push: {messages: messagedata}},{new:true}, function(err,roommessages){
+			.findOneAndUpdate({'name':'main'},{$push: {messages: messagedata}},{new:true}, function(err,mainroom){
 				if (err) { throw err; }
 					var result = {
-						username: messagedata.username,
-						messages: roommessages.messages
+						username: mainroom.username,
+						messages: mainroom.messages
 					}
 					io.sockets.emit('update', result);
 			});

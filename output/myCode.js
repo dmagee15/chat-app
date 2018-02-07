@@ -4798,6 +4798,7 @@ var App = function (_React$Component) {
             noData: false,
             username: null,
             logged: false,
+            room: 'main',
             newRoomWindow: false
         };
         return _this;
@@ -4809,7 +4810,7 @@ var App = function (_React$Component) {
             var _this2 = this;
 
             socket.on('update', function (j) {
-
+                console.log(j.messages);
                 if (j.messages != null) {
                     _this2.setState({
                         messagedata: j.messages,
@@ -4864,6 +4865,20 @@ var App = function (_React$Component) {
                             _react2.default.createElement(
                                 "div",
                                 { className: "login" },
+                                _react2.default.createElement(
+                                    "div",
+                                    { className: "loginHeaderContainer" },
+                                    _react2.default.createElement(
+                                        "p",
+                                        { className: "roomName" },
+                                        this.state.room
+                                    ),
+                                    _react2.default.createElement(
+                                        "p",
+                                        { className: "username" },
+                                        this.state.username
+                                    )
+                                ),
                                 _react2.default.createElement(Login, null)
                             ),
                             _react2.default.createElement(

@@ -20,6 +20,7 @@ class App extends React.Component{
         noData: false,
         username: null,
         logged: false,
+        room: 'main',
         newRoomWindow: false
         };
     }
@@ -28,7 +29,7 @@ class App extends React.Component{
         
         
         socket.on('update', (j) => {
-		        
+		        console.log(j.messages);
 		        if(j.messages!=null){
 		            this.setState({
                     messagedata: j.messages,
@@ -134,6 +135,10 @@ class App extends React.Component{
                     </div>
                     <div className='options'>
                         <div className='login'>
+                            <div className='loginHeaderContainer'>
+                            <p className='roomName'>{this.state.room}</p>
+                            <p className='username'>{this.state.username}</p>
+                            </div>
                             <Login/>
                         </div>
                         <div className='roomControl'>
