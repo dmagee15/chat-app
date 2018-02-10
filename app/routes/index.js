@@ -8,6 +8,7 @@ module.exports = function (app, yahooFinance, io) {
 	io.on('connection', function(client){
     console.log("IO CLIENT CONNECTED");
 //    Room.find({}).remove().exec();
+	client.join('main');
     Room
 				.find({}, function (err, result) {
 				if (err) { throw err; }
@@ -26,7 +27,7 @@ module.exports = function (app, yahooFinance, io) {
 							username: guestName,
 							messages: mainroom.messages
 						}
-						io.sockets.emit('update', result);
+						io.sockets.in('main').emit('initial', result);
 					});
 				}
 			});
@@ -37,10 +38,9 @@ module.exports = function (app, yahooFinance, io) {
 			.findOneAndUpdate({'name':'main'},{$push: {messages: messagedata}},{new:true}, function(err,mainroom){
 				if (err) { throw err; }
 					var result = {
-						username: mainroom.username,
 						messages: mainroom.messages
 					}
-					io.sockets.emit('update', result);
+					io.sockets.in('main').emit('messageUpdate', result);
 			});
 		
 		

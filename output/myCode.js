@@ -4809,12 +4809,30 @@ var App = function (_React$Component) {
         value: function componentDidMount() {
             var _this2 = this;
 
-            socket.on('update', function (j) {
+            socket.on('initial', function (j) {
                 console.log(j.messages);
                 if (j.messages != null) {
                     _this2.setState({
                         messagedata: j.messages,
                         username: j.username,
+                        loaded: true,
+                        noData: j.length == 0
+                    }, function () {
+                        $(".messages").scrollTop($(".messages")[0].scrollHeight);
+                    });
+                } else {
+                    _this2.setState({
+                        loaded: true,
+                        noData: true
+                    });
+                }
+            });
+
+            socket.on('messageUpdate', function (j) {
+                console.log(j.messages);
+                if (j.messages != null) {
+                    _this2.setState({
+                        messagedata: j.messages,
                         loaded: true,
                         noData: j.length == 0
                     }, function () {

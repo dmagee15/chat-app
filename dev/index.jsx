@@ -27,8 +27,7 @@ class App extends React.Component{
     
     componentDidMount() {
         
-        
-        socket.on('update', (j) => {
+        socket.on('initial', (j) => {
 		        console.log(j.messages);
 		        if(j.messages!=null){
 		            this.setState({
@@ -45,9 +44,24 @@ class App extends React.Component{
                     });
 		        }
 		        
-
+        });
         
-            
+        socket.on('messageUpdate', (j) => {
+		        console.log(j.messages);
+		        if(j.messages!=null){
+		            this.setState({
+                    messagedata: j.messages,
+                    loaded: true,
+                    noData: (j.length==0)
+                    }, function(){$(".messages").scrollTop($(".messages")[0].scrollHeight);});
+		        }
+		        else{
+		            this.setState({
+                    loaded: true,
+                    noData: true
+                    });
+		        }
+		        
         });
         
     }
