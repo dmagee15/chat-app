@@ -17,6 +17,12 @@ module.exports = function (app, yahooFinance, io) {
 					newRoom.name = 'main';
 					newRoom.messages = [];
 					newRoom.save();
+					var guestName = "Guest"+Math.floor(Math.random()*10000);
+						var result = {
+							username: guestName,
+							messages: []
+						}
+						io.sockets.in('main').emit('initial', result);
 				}
 				else{
 					Room.findOne({'name':'main'}, function(err,mainroom){

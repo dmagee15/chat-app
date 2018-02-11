@@ -213,20 +213,17 @@ class RoomControl extends React.Component{
     constructor(props){
         super(props);
     this.state = {
-        usernameInput: '',
-        passwordInput: '',
-        searchInput: '',
+        roomSelect: '',
+        roomData: ['Room One']
     }
     }
-    handleUsernameChange = (event) =>{
-        this.setState({
-            usernameInput: event.target.value
-        });
-    }
-    handlePasswordChange = (event) =>{
-        this.setState({
-            passwordInput: event.target.value
-        });
+    handleRoomSelect = (roomName) => {
+        if(roomName==this.state.roomSelect){
+            this.setState({roomSelect:''});
+        }
+        else{
+            this.setState({roomSelect:roomName});
+        }
     }
     handleSearchInputChange = (event) => {
             this.setState({
@@ -242,7 +239,22 @@ class RoomControl extends React.Component{
 
     }
     render(){
-        
+        var display = this.state.roomData.map((roomName,index) => {
+                if(roomName==this.state.roomSelect){
+                    return(
+                    <button className='roomElement' key={roomName} style={{backgroundColor:'lightblue'}} onClick={()=>{this.handleRoomSelect(roomName)}}>
+                    <p>{roomName}</p>
+                    </button>
+                    )
+                }
+                else{
+                    return(
+                    <button className='roomElement' key={roomName} onClick={()=>{this.handleRoomSelect(roomName)}}>
+                    <p>{roomName}</p>
+                    </button>
+                    )
+                }
+                });
         return(
             <div className='roomControlBody'>
                 <div className='searchContainer'>
@@ -254,9 +266,7 @@ class RoomControl extends React.Component{
                 </div>
                 <div className='roomList'>
                     <div className='List'>
-                        <div className='roomElement'>
-                            <p>Room One</p>
-                        </div>
+                        {display}
                     </div>
                     <div className='roomListButtonContainer'>
                         <button className='joinButton'>Join</button>

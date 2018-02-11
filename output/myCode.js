@@ -4990,16 +4990,12 @@ var RoomControl = function (_React$Component3) {
 
         var _this4 = _possibleConstructorReturn(this, (RoomControl.__proto__ || Object.getPrototypeOf(RoomControl)).call(this, props));
 
-        _this4.handleUsernameChange = function (event) {
-            _this4.setState({
-                usernameInput: event.target.value
-            });
-        };
-
-        _this4.handlePasswordChange = function (event) {
-            _this4.setState({
-                passwordInput: event.target.value
-            });
+        _this4.handleRoomSelect = function (roomName) {
+            if (roomName == _this4.state.roomSelect) {
+                _this4.setState({ roomSelect: '' });
+            } else {
+                _this4.setState({ roomSelect: roomName });
+            }
         };
 
         _this4.handleSearchInputChange = function (event) {
@@ -5017,9 +5013,8 @@ var RoomControl = function (_React$Component3) {
         _this4.submitSearch = function () {};
 
         _this4.state = {
-            usernameInput: '',
-            passwordInput: '',
-            searchInput: ''
+            roomSelect: '',
+            roomData: ['Room One']
         };
         return _this4;
     }
@@ -5027,7 +5022,35 @@ var RoomControl = function (_React$Component3) {
     _createClass(RoomControl, [{
         key: "render",
         value: function render() {
+            var _this5 = this;
 
+            var display = this.state.roomData.map(function (roomName, index) {
+                if (roomName == _this5.state.roomSelect) {
+                    return _react2.default.createElement(
+                        "button",
+                        { className: "roomElement", key: roomName, style: { backgroundColor: 'lightblue' }, onClick: function onClick() {
+                                _this5.handleRoomSelect(roomName);
+                            } },
+                        _react2.default.createElement(
+                            "p",
+                            null,
+                            roomName
+                        )
+                    );
+                } else {
+                    return _react2.default.createElement(
+                        "button",
+                        { className: "roomElement", key: roomName, onClick: function onClick() {
+                                _this5.handleRoomSelect(roomName);
+                            } },
+                        _react2.default.createElement(
+                            "p",
+                            null,
+                            roomName
+                        )
+                    );
+                }
+            });
             return _react2.default.createElement(
                 "div",
                 { className: "roomControlBody" },
@@ -5056,15 +5079,7 @@ var RoomControl = function (_React$Component3) {
                     _react2.default.createElement(
                         "div",
                         { className: "List" },
-                        _react2.default.createElement(
-                            "div",
-                            { className: "roomElement" },
-                            _react2.default.createElement(
-                                "p",
-                                null,
-                                "Room One"
-                            )
-                        )
+                        display
                     ),
                     _react2.default.createElement(
                         "div",
@@ -5089,16 +5104,16 @@ var StockBox = function (_React$Component4) {
     function StockBox(props) {
         _classCallCheck(this, StockBox);
 
-        var _this5 = _possibleConstructorReturn(this, (StockBox.__proto__ || Object.getPrototypeOf(StockBox)).call(this, props));
+        var _this6 = _possibleConstructorReturn(this, (StockBox.__proto__ || Object.getPrototypeOf(StockBox)).call(this, props));
 
-        _this5.delete = function () {
-            _this5.setState({ delete: true }, _this5.props.handleButtonDelete(_this5.props.index));
+        _this6.delete = function () {
+            _this6.setState({ delete: true }, _this6.props.handleButtonDelete(_this6.props.index));
         };
 
-        _this5.state = {
+        _this6.state = {
             delete: false
         };
-        return _this5;
+        return _this6;
     }
 
     _createClass(StockBox, [{
@@ -5310,18 +5325,18 @@ var NewRoom = function (_React$Component8) {
     function NewRoom(props) {
         _classCallCheck(this, NewRoom);
 
-        var _this9 = _possibleConstructorReturn(this, (NewRoom.__proto__ || Object.getPrototypeOf(NewRoom)).call(this, props));
+        var _this10 = _possibleConstructorReturn(this, (NewRoom.__proto__ || Object.getPrototypeOf(NewRoom)).call(this, props));
 
-        _this9.handleNameChange = function (event) {
-            _this9.setState({
+        _this10.handleNameChange = function (event) {
+            _this10.setState({
                 nameInput: event.target.value
             });
         };
 
-        _this9.state = {
+        _this10.state = {
             nameInput: ''
         };
-        return _this9;
+        return _this10;
     }
 
     _createClass(NewRoom, [{
