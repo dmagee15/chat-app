@@ -10,9 +10,9 @@ module.exports = function (app, yahooFinance, io) {
 //    Room.find({}).remove().exec();
 	client.join('main');
     Room
-				.find({}, function (err, result) {
+				.find({}, function (err, rooms) {
 				if (err) { throw err; }
-				if(result[0]==undefined){
+				if(rooms[0]==undefined){
 					var newRoom = new Room();
 					newRoom.name = 'main';
 					newRoom.messages = [];
@@ -28,10 +28,16 @@ module.exports = function (app, yahooFinance, io) {
 					Room.findOne({'name':'main'}, function(err,mainroom){
 						if(err) throw err;
 						console.log(JSON.stringify(mainroom));
+						var length = rooms.length;
+						var roomArray = [];
+						for(var x=0;x<length;x++){
+							roomArray.push(rooms[x].name);
+						}
 						var guestName = "Guest"+Math.floor(Math.random()*10000);
 						var result = {
 							username: guestName,
-							messages: mainroom.messages
+							messages: mainroom.messages,
+							rooms: roomArray
 						}
 						io.sockets.in('main').emit('initial', result);
 					});
@@ -47,6 +53,45 @@ module.exports = function (app, yahooFinance, io) {
 						messages: mainroom.messages
 					}
 					io.sockets.in('main').emit('messageUpdate', result);
+			});
+		
+		
+		
+	});
+	client.on('addNewRoom', function(newRoomName){
+
+        Room
+			.find({}, function(err,rooms){
+				if (err) { throw err; }
+				console.log(rooms);
+				var duplicate = false;
+				var length = rooms.length;
+				var roomArray = [];
+				for(var x=0;x<length;x++){
+					roomArray.push(rooms[x].name);
+					if(rooms[x].name==newRoomName){
+						console.log("Room already exists.");
+						duplicate = true;
+					}
+				}
+				if(!duplicate){
+					var newRoom = new Room();
+					newRoom.name = newRoomName;
+					newRoom.messages = [];
+					newRoom.save();
+					roomArray.push(newRoomName);
+					io.sockets.emit('newRoomAdded', roomArray);
+				}
+/*					var newRoom = new Room();
+					newRoom.name = 'main';
+					newRoom.messages = [];
+					newRoom.save();
+					var guestName = "Guest"+Math.floor(Math.random()*10000);
+						var result = {
+							username: guestName,
+							messages: []
+						}
+						io.sockets.in('main').emit('initial', result);*/
 			});
 		
 		

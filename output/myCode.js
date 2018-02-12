@@ -4722,6 +4722,11 @@ var App = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
+        _this.submitNewRoomHandler = function (newRoomName) {
+            console.log(newRoomName);
+            socket.emit('addNewRoom', newRoomName);
+        };
+
         _this.newRoomWindowHandler = function () {
             _this.setState({ newRoomWindow: !_this.state.newRoomWindow });
         };
@@ -4769,25 +4774,6 @@ var App = function (_React$Component) {
             socket.emit('add', result);
         };
 
-        _this.deleteStock = function () {
-            _this.setState({
-                loaded: false
-            }, function () {
-                var temp = this.state.series.slice();
-                var result = [];
-                var length = temp.length;
-                var stockName = '';
-                for (var x = 0; x < length; x++) {
-                    if (x != Number(this.state.deletesubmit)) {
-                        result.push(temp[x]);
-                    } else {
-                        stockName = temp[x].name;
-                    }
-                }
-                socket.emit('delete', stockName);
-            });
-        };
-
         _this.state = {
             messagedata: null,
             loaded: false,
@@ -4799,6 +4785,7 @@ var App = function (_React$Component) {
             username: null,
             logged: false,
             room: 'main',
+            rooms: ['main'],
             newRoomWindow: false
         };
         return _this;
@@ -4815,6 +4802,7 @@ var App = function (_React$Component) {
                     _this2.setState({
                         messagedata: j.messages,
                         username: j.username,
+                        rooms: j.rooms,
                         loaded: true,
                         noData: j.length == 0
                     }, function () {
@@ -4844,6 +4832,10 @@ var App = function (_React$Component) {
                         noData: true
                     });
                 }
+            });
+
+            socket.on('newRoomAdded', function (j) {
+                _this2.setState({ rooms: j });
             });
         }
     }, {
@@ -4902,7 +4894,7 @@ var App = function (_React$Component) {
                             _react2.default.createElement(
                                 "div",
                                 { className: "roomControl" },
-                                _react2.default.createElement(RoomControl, { newRoomWindowHandler: this.newRoomWindowHandler })
+                                _react2.default.createElement(RoomControl, { rooms: this.state.rooms, newRoomWindowHandler: this.newRoomWindowHandler })
                             )
                         )
                     ),
@@ -4916,7 +4908,7 @@ var App = function (_React$Component) {
                             "Submit"
                         )
                     ),
-                    _react2.default.createElement(NewRoom, { newRoomWindow: this.state.newRoomWindow, newRoomWindowHandler: this.newRoomWindowHandler })
+                    _react2.default.createElement(NewRoom, { submitNewRoomHandler: this.submitNewRoomHandler, newRoomWindow: this.state.newRoomWindow, newRoomWindowHandler: this.newRoomWindowHandler })
                 )
             );
         }
@@ -5024,7 +5016,7 @@ var RoomControl = function (_React$Component3) {
         value: function render() {
             var _this5 = this;
 
-            var display = this.state.roomData.map(function (roomName, index) {
+            var display = this.props.rooms.map(function (roomName, index) {
                 if (roomName == _this5.state.roomSelect) {
                     return _react2.default.createElement(
                         "button",
@@ -5333,8 +5325,17 @@ var NewRoom = function (_React$Component8) {
             });
         };
 
+        _this10.handleSubmit = function () {
+            _this10.setState({ nameSubmit: _this10.state.nameInput,
+                nameInput: ''
+            }, function () {
+                _this10.props.submitNewRoomHandler(_this10.state.nameSubmit);_this10.props.newRoomWindowHandler();
+            });
+        };
+
         _this10.state = {
-            nameInput: ''
+            nameInput: '',
+            nameSubmit: ''
         };
         return _this10;
     }

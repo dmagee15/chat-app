@@ -21,6 +21,7 @@ class App extends React.Component{
         username: null,
         logged: false,
         room: 'main',
+        rooms: ['main'],
         newRoomWindow: false
         };
     }
@@ -33,6 +34,7 @@ class App extends React.Component{
 		            this.setState({
                     messagedata: j.messages,
                     username: j.username,
+                    rooms: j.rooms,
                     loaded: true,
                     noData: (j.length==0)
                     }, function(){$(".messages").scrollTop($(".messages")[0].scrollHeight);});
@@ -64,6 +66,14 @@ class App extends React.Component{
 		        
         });
         
+        socket.on('newRoomAdded', (j) => {
+		        this.setState({rooms:j});
+        });
+        
+    }
+    submitNewRoomHandler = (newRoomName) =>{
+        console.log(newRoomName);
+        socket.emit('addNewRoom', newRoomName);
     }
     newRoomWindowHandler = () =>{
         this.setState({newRoomWindow:!this.state.newRoomWindow});
@@ -111,25 +121,6 @@ class App extends React.Component{
             socket.emit('add', result);
     }
     
-    deleteStock = () => {
-        this.setState({
-            loaded: false
-        }, function(){
-        var temp = this.state.series.slice();
-        var result = [];
-        var length = temp.length;
-        var stockName = '';
-        for(var x=0;x<length;x++){
-            if(x!=Number(this.state.deletesubmit)){
-                result.push(temp[x]);
-            }
-            else{
-                stockName = temp[x].name;
-            }
-        }
-		socket.emit('delete', stockName);
-        });
-    }
     
    render(){
             console.log
@@ -156,7 +147,7 @@ class App extends React.Component{
                             <Login/>
                         </div>
                         <div className='roomControl'>
-                            <RoomControl newRoomWindowHandler={this.newRoomWindowHandler}/>
+                            <RoomControl rooms={this.state.rooms} newRoomWindowHandler={this.newRoomWindowHandler}/>
                         </div>
                     </div>
                 </div>
@@ -164,7 +155,7 @@ class App extends React.Component{
                     <textarea type="text" placeholder="Enter new message..." value={this.state.input} onChange={this.handleInput}/>
                     <button onClick={this.handleSubmit}>Submit</button>
                 </div>
-                <NewRoom newRoomWindow={this.state.newRoomWindow} newRoomWindowHandler={this.newRoomWindowHandler}/>
+                <NewRoom submitNewRoomHandler={this.submitNewRoomHandler} newRoomWindow={this.state.newRoomWindow} newRoomWindowHandler={this.newRoomWindowHandler}/>
             </div>
             
           </div>
@@ -239,7 +230,7 @@ class RoomControl extends React.Component{
 
     }
     render(){
-        var display = this.state.roomData.map((roomName,index) => {
+        var display = this.props.rooms.map((roomName,index) => {
                 if(roomName==this.state.roomSelect){
                     return(
                     <button className='roomElement' key={roomName} style={{backgroundColor:'lightblue'}} onClick={()=>{this.handleRoomSelect(roomName)}}>
@@ -431,12 +422,18 @@ class NewRoom extends React.Component{
     super(props);
     this.state = {
         nameInput: '',
+        nameSubmit: ''
         }
     }
     handleNameChange = (event) =>{
         this.setState({
             nameInput: event.target.value
         });
+    }
+    handleSubmit = () =>{
+        this.setState({nameSubmit: this.state.nameInput,
+            nameInput: ''
+        }, ()=>{this.props.submitNewRoomHandler(this.state.nameSubmit);this.props.newRoomWindowHandler();});
     }
     render(){
         if(this.props.newRoomWindow==false){
