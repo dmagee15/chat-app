@@ -19,7 +19,7 @@ class App extends React.Component{
         deletesubmit: '',
         noData: false,
         username: null,
-        logged: false,
+        logged: true,
         room: 'main',
         rooms: ['main'],
         newRoomWindow: false
@@ -70,6 +70,29 @@ class App extends React.Component{
 		        this.setState({rooms:j});
         });
         
+        socket.on('roomJoined', (j) => {
+
+		        if(j.messages!=null){
+		            this.setState({
+                    messagedata: j.messages,
+                    loaded: true,
+                    room: j.room,
+                    noData: (j.length==0)
+                    }, function(){$(".messages").scrollTop($(".messages")[0].scrollHeight);});
+		        }
+		        else{
+		            this.setState({
+                    loaded: true,
+                    noData: true,
+                    room: j.room
+                    });
+		        }
+        });
+        
+        socket.on('signedUp', (j) => {
+		        this.setState({rooms:j});
+        });
+        
     }
     submitNewRoomHandler = (newRoomName) =>{
         console.log(newRoomName);
@@ -77,6 +100,14 @@ class App extends React.Component{
     }
     newRoomWindowHandler = () =>{
         this.setState({newRoomWindow:!this.state.newRoomWindow});
+    }
+    joinRoomHandler = (roomToJoin) =>{
+        console.log("Joining Room");
+        var data = {
+            previousRoom: this.state.room,
+            roomToJoin: roomToJoin
+        }
+        socket.emit('joinRoom', data);
     }
     handleInput = (event) => {
         this.setState({
@@ -115,12 +146,25 @@ class App extends React.Component{
     submitMessage = () => {
             console.log('submitmessage');
             var result = {
-                username: this.state.username,
-                message: this.state.submit
+                messagedata:{
+                    username: this.state.username,
+                    message: this.state.submit
+                },
+                room: this.state.room
             }
             socket.emit('add', result);
     }
-    
+    signUpHandler = (username,password) =>{
+        var data = {
+            username: username,
+            password: password
+        }
+        socket.emit('signUp', data);
+    }
+    logoutHandler = () =>{
+        console.log("Logout");
+//        socket.emit('logout', data);
+    }
     
    render(){
             console.log
@@ -144,10 +188,10 @@ class App extends React.Component{
                             <p className='roomName'>{this.state.room}</p>
                             <p className='username'>{this.state.username}</p>
                             </div>
-                            <Login/>
+                            <Login logged={this.state.logged} logoutHandler={this.logoutHandler} signUpHandler={this.signUpHandler}/>
                         </div>
                         <div className='roomControl'>
-                            <RoomControl rooms={this.state.rooms} newRoomWindowHandler={this.newRoomWindowHandler}/>
+                            <RoomControl rooms={this.state.rooms} joinRoomHandler={this.joinRoomHandler} newRoomWindowHandler={this.newRoomWindowHandler}/>
                         </div>
                     </div>
                 </div>
@@ -185,15 +229,31 @@ class Login extends React.Component{
             passwordInput: event.target.value
         });
     }
+    signUp = () =>{
+        this.props.signUpHandler(this.state.usernameInput,this.state.passwordInput);
+        this.setState({usernameInput: '',
+            passwordInput: ''
+        });
+    }
     render(){
-        
+        if(this.props.logged){
+            return(
+            <div className='loginBody'>
+                <div className='loginBodyLogSpace'>
+                </div>
+                <div className='loginButtonContainer'>
+                    <button onClick={this.props.logoutHandler} className='loginButton'>Logout</button>
+                </div>
+            </div>
+            );
+        }
         return(
             <div className='loginBody'>
                 <input type="text" placeholder="Username" value={this.state.usernameInput} onChange={this.handleUsernameChange}/>
                 <input type="text" placeholder="Password" value={this.state.passwordInput} onChange={this.handlePasswordChange}/>
                 <div className='loginButtonContainer'>
                     <button className='loginButton'>Login</button>
-                    <button className='signupButton'>SignUp</button>
+                    <button className='signupButton' onClick={this.signUp}>SignUp</button>
                 </div>
             </div>
             );
@@ -225,6 +285,10 @@ class RoomControl extends React.Component{
         if(event.key=='Enter'){
             this.submitSearch();
         }
+    }
+    joinRoom = () => {
+        this.props.joinRoomHandler(this.state.roomSelect);
+        this.setState({roomSelect: ''});
     }
     submitSearch = () => {
 
@@ -260,7 +324,7 @@ class RoomControl extends React.Component{
                         {display}
                     </div>
                     <div className='roomListButtonContainer'>
-                        <button className='joinButton'>Join</button>
+                        <button onClick={this.joinRoom} className='joinButton'>Join</button>
                     </div>
                 </div>
             </div>

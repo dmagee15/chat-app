@@ -2,6 +2,7 @@
 
 var path = process.cwd();
 var Room = require('../models/room.js');
+var User = require('../models/user.js');
 
 module.exports = function (app, yahooFinance, io) {
 	
@@ -44,15 +45,15 @@ module.exports = function (app, yahooFinance, io) {
 				}
 			});
     
-	client.on('add', function(messagedata){
+	client.on('add', function(data){
 
         Room
-			.findOneAndUpdate({'name':'main'},{$push: {messages: messagedata}},{new:true}, function(err,mainroom){
+			.findOneAndUpdate({'name':data.room},{$push: {messages: data.messagedata}},{new:true}, function(err,room){
 				if (err) { throw err; }
 					var result = {
-						messages: mainroom.messages
+						messages: room.messages
 					}
-					io.sockets.in('main').emit('messageUpdate', result);
+					io.sockets.in(data.room).emit('messageUpdate', result);
 			});
 		
 		
@@ -74,7 +75,7 @@ module.exports = function (app, yahooFinance, io) {
 						duplicate = true;
 					}
 				}
-				if(!duplicate){
+				if(!duplicate&&newRoomName){
 					var newRoom = new Room();
 					newRoom.name = newRoomName;
 					newRoom.messages = [];
@@ -92,6 +93,40 @@ module.exports = function (app, yahooFinance, io) {
 							messages: []
 						}
 						io.sockets.in('main').emit('initial', result);*/
+			});
+		
+		
+		
+	});
+	client.on('joinRoom', function(data){
+		
+		client.leave(data.previousRoom);
+		client.join(data.roomToJoin);
+        Room
+			.findOne({'name':data.roomToJoin},function(err,room){
+				if (err) { throw err; }
+					var result = {
+						room: data.roomToJoin,
+						messages: room.messages
+					}
+					io.sockets.in(data.roomToJoin).emit('roomJoined', result);
+			});
+		
+		
+		
+	});
+	client.on('signUp', function(data){
+		
+        Room
+			.findOne({'username':data.username},function(err,user){
+				if (err) { throw err; }
+					if(!user){
+						console.log("User not found");
+						var newUser = new User();
+						newUser.username = data.username;
+						newUser.password = data.password;
+						newUser.save();
+					}
 			});
 		
 		

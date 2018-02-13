@@ -4731,6 +4731,15 @@ var App = function (_React$Component) {
             _this.setState({ newRoomWindow: !_this.state.newRoomWindow });
         };
 
+        _this.joinRoomHandler = function (roomToJoin) {
+            console.log("Joining Room");
+            var data = {
+                previousRoom: _this.state.room,
+                roomToJoin: roomToJoin
+            };
+            socket.emit('joinRoom', data);
+        };
+
         _this.handleInput = function (event) {
             _this.setState({
                 input: event.target.value
@@ -4768,10 +4777,21 @@ var App = function (_React$Component) {
         _this.submitMessage = function () {
             console.log('submitmessage');
             var result = {
-                username: _this.state.username,
-                message: _this.state.submit
+                messagedata: {
+                    username: _this.state.username,
+                    message: _this.state.submit
+                },
+                room: _this.state.room
             };
             socket.emit('add', result);
+        };
+
+        _this.signUpHandler = function (username, password) {
+            var data = {
+                username: username,
+                password: password
+            };
+            socket.emit('signUp', data);
         };
 
         _this.state = {
@@ -4783,7 +4803,7 @@ var App = function (_React$Component) {
             deletesubmit: '',
             noData: false,
             username: null,
-            logged: false,
+            logged: true,
             room: 'main',
             rooms: ['main'],
             newRoomWindow: false
@@ -4835,6 +4855,30 @@ var App = function (_React$Component) {
             });
 
             socket.on('newRoomAdded', function (j) {
+                _this2.setState({ rooms: j });
+            });
+
+            socket.on('roomJoined', function (j) {
+
+                if (j.messages != null) {
+                    _this2.setState({
+                        messagedata: j.messages,
+                        loaded: true,
+                        room: j.room,
+                        noData: j.length == 0
+                    }, function () {
+                        $(".messages").scrollTop($(".messages")[0].scrollHeight);
+                    });
+                } else {
+                    _this2.setState({
+                        loaded: true,
+                        noData: true,
+                        room: j.room
+                    });
+                }
+            });
+
+            socket.on('signedUp', function (j) {
                 _this2.setState({ rooms: j });
             });
         }
@@ -4889,12 +4933,12 @@ var App = function (_React$Component) {
                                         this.state.username
                                     )
                                 ),
-                                _react2.default.createElement(Login, null)
+                                _react2.default.createElement(Login, { logged: this.state.logged, signUpHandler: this.signUpHandler })
                             ),
                             _react2.default.createElement(
                                 "div",
                                 { className: "roomControl" },
-                                _react2.default.createElement(RoomControl, { rooms: this.state.rooms, newRoomWindowHandler: this.newRoomWindowHandler })
+                                _react2.default.createElement(RoomControl, { rooms: this.state.rooms, joinRoomHandler: this.joinRoomHandler, newRoomWindowHandler: this.newRoomWindowHandler })
                             )
                         )
                     ),
@@ -4937,6 +4981,13 @@ var Login = function (_React$Component2) {
             });
         };
 
+        _this3.signUp = function () {
+            _this3.props.signUpHandler(_this3.state.usernameInput, _this3.state.passwordInput);
+            _this3.setState({ usernameInput: '',
+                passwordInput: ''
+            });
+        };
+
         _this3.state = {
             usernameInput: '',
             passwordInput: ''
@@ -4947,7 +4998,27 @@ var Login = function (_React$Component2) {
     _createClass(Login, [{
         key: "render",
         value: function render() {
-
+            if (this.props.logged) {
+                return _react2.default.createElement(
+                    "div",
+                    { className: "loginBody" },
+                    _react2.default.createElement("div", { className: "loginBodyLogSpace" }),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "loginButtonContainer" },
+                        _react2.default.createElement(
+                            "button",
+                            { className: "loginButton" },
+                            "Login"
+                        ),
+                        _react2.default.createElement(
+                            "button",
+                            { className: "signupButton", onClick: this.signUp },
+                            "SignUp"
+                        )
+                    )
+                );
+            }
             return _react2.default.createElement(
                 "div",
                 { className: "loginBody" },
@@ -4963,7 +5034,7 @@ var Login = function (_React$Component2) {
                     ),
                     _react2.default.createElement(
                         "button",
-                        { className: "signupButton" },
+                        { className: "signupButton", onClick: this.signUp },
                         "SignUp"
                     )
                 )
@@ -5000,6 +5071,11 @@ var RoomControl = function (_React$Component3) {
             if (event.key == 'Enter') {
                 _this4.submitSearch();
             }
+        };
+
+        _this4.joinRoom = function () {
+            _this4.props.joinRoomHandler(_this4.state.roomSelect);
+            _this4.setState({ roomSelect: '' });
         };
 
         _this4.submitSearch = function () {};
@@ -5078,7 +5154,7 @@ var RoomControl = function (_React$Component3) {
                         { className: "roomListButtonContainer" },
                         _react2.default.createElement(
                             "button",
-                            { className: "joinButton" },
+                            { onClick: this.joinRoom, className: "joinButton" },
                             "Join"
                         )
                     )

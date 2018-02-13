@@ -265,7 +265,10 @@ span {
 }
 .loginBody{
 	width: 100%;
-	height: 100%;
+	height: 150px;
+}
+.loginBodyLogSpace{
+	height:95px;
 }
 .loginBody input{
 	padding:0px 0px 0px 10px;
@@ -347,6 +350,7 @@ span {
 	background:none;
 	border:none;
 	outline:none;
+	text-align: left;
 	transition: background-color 0.5s;
 }
 .roomElement:active{
