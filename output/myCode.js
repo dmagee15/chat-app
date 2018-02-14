@@ -4794,6 +4794,17 @@ var App = function (_React$Component) {
             socket.emit('signUp', data);
         };
 
+        _this.logoutHandler = function () {
+            console.log("Logout");
+            //        socket.emit('logout', data);
+        };
+
+        _this.enterHandler = function (event) {
+            if (event.key == 'Enter') {
+                _this.handleSubmit();
+            }
+        };
+
         _this.state = {
             messagedata: null,
             loaded: false,
@@ -4933,7 +4944,7 @@ var App = function (_React$Component) {
                                         this.state.username
                                     )
                                 ),
-                                _react2.default.createElement(Login, { logged: this.state.logged, signUpHandler: this.signUpHandler })
+                                _react2.default.createElement(Login, { logged: this.state.logged, logoutHandler: this.logoutHandler, signUpHandler: this.signUpHandler })
                             ),
                             _react2.default.createElement(
                                 "div",
@@ -4945,7 +4956,7 @@ var App = function (_React$Component) {
                     _react2.default.createElement(
                         "div",
                         { className: "inputSection" },
-                        _react2.default.createElement("textarea", { type: "text", placeholder: "Enter new message...", value: this.state.input, onChange: this.handleInput }),
+                        _react2.default.createElement("textarea", { type: "text", placeholder: "Enter new message...", onKeyPress: this.enterHandler, value: this.state.input, onChange: this.handleInput }),
                         _react2.default.createElement(
                             "button",
                             { onClick: this.handleSubmit },
@@ -5008,13 +5019,8 @@ var Login = function (_React$Component2) {
                         { className: "loginButtonContainer" },
                         _react2.default.createElement(
                             "button",
-                            { className: "loginButton" },
-                            "Login"
-                        ),
-                        _react2.default.createElement(
-                            "button",
-                            { className: "signupButton", onClick: this.signUp },
-                            "SignUp"
+                            { onClick: this.props.logoutHandler, className: "loginButton" },
+                            "Logout"
                         )
                     )
                 );

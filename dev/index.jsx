@@ -110,9 +110,9 @@ class App extends React.Component{
         socket.emit('joinRoom', data);
     }
     handleInput = (event) => {
-        this.setState({
+            this.setState({
             input: event.target.value
-        });
+            });
     }
     
     handleSubmit = (event) => {
@@ -165,6 +165,11 @@ class App extends React.Component{
         console.log("Logout");
 //        socket.emit('logout', data);
     }
+    enterHandler = (event) =>{
+        if(event.key=='Enter'){
+            this.handleSubmit();
+        }
+    }
     
    render(){
             console.log
@@ -196,7 +201,7 @@ class App extends React.Component{
                     </div>
                 </div>
                 <div className='inputSection'>
-                    <textarea type="text" placeholder="Enter new message..." value={this.state.input} onChange={this.handleInput}/>
+                    <textarea type="text" placeholder="Enter new message..." onKeyPress={this.enterHandler} value={this.state.input} onChange={this.handleInput}/>
                     <button onClick={this.handleSubmit}>Submit</button>
                 </div>
                 <NewRoom submitNewRoomHandler={this.submitNewRoomHandler} newRoomWindow={this.state.newRoomWindow} newRoomWindowHandler={this.newRoomWindowHandler}/>
