@@ -6,6 +6,28 @@ var User = require('../models/user.js');
 
 module.exports = function (app, yahooFinance, io) {
 	
+	app.post('/signup', function(req,res){
+
+    	Room
+			.findOne({'username':req.body.username},function(err,user){
+				if (err) { throw err; }
+					if(!user){
+						console.log("User not found");
+						var newUser = new User();
+						newUser.username = req.body.username;
+						newUser.password = req.body.password;
+						newUser.save();
+						var data = {
+							username: req.body.username
+						}
+						res.send(data);
+					}
+					else{
+						res.send(null);
+					}
+			});
+    	
+    });
 	io.on('connection', function(client){
     console.log("IO CLIENT CONNECTED");
 //    Room.find({}).remove().exec();

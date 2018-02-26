@@ -4787,11 +4787,22 @@ var App = function (_React$Component) {
         };
 
         _this.signUpHandler = function (username, password) {
-            var data = {
-                username: username,
-                password: password
-            };
-            socket.emit('signUp', data);
+            fetch('/signup', {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                credentials: 'include',
+                body: JSON.stringify({ "username": username,
+                    "password": password
+                })
+            }).then(function (data) {
+                return data.json();
+            }).then(function (j) {
+                if (j) {
+                    _this.setState({ logged: true,
+                        username: j.username
+                    });
+                }
+            });
         };
 
         _this.logoutHandler = function () {
@@ -4814,7 +4825,7 @@ var App = function (_React$Component) {
             deletesubmit: '',
             noData: false,
             username: null,
-            logged: true,
+            logged: false,
             room: 'main',
             rooms: ['main'],
             newRoomWindow: false

@@ -19,7 +19,7 @@ class App extends React.Component{
         deletesubmit: '',
         noData: false,
         username: null,
-        logged: true,
+        logged: false,
         room: 'main',
         rooms: ['main'],
         newRoomWindow: false
@@ -155,11 +155,23 @@ class App extends React.Component{
             socket.emit('add', result);
     }
     signUpHandler = (username,password) =>{
-        var data = {
-            username: username,
-            password: password
-        }
-        socket.emit('signUp', data);
+        fetch('/signup', {
+        method: 'POST',
+        headers: {"Content-Type": "application/json"},
+        credentials: 'include',
+        body: JSON.stringify({"username":username,
+            "password":password
+        })
+        }).then(function(data) {
+            return data.json();
+        }).then((j) =>{
+            if(j){
+                this.setState({logged: true,
+                username: j.username,
+                });
+            }
+
+        });
     }
     logoutHandler = () =>{
         console.log("Logout");
