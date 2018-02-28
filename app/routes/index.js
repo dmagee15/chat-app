@@ -8,7 +8,7 @@ module.exports = function (app, yahooFinance, io) {
 	
 	app.post('/signup', function(req,res){
 
-    	Room
+    	User
 			.findOne({'username':req.body.username},function(err,user){
 				if (err) { throw err; }
 					if(!user){
@@ -23,6 +23,27 @@ module.exports = function (app, yahooFinance, io) {
 						res.send(data);
 					}
 					else{
+						res.send(null);
+					}
+			});
+    	
+    });
+    app.post('/login', function(req,res){
+
+    	User
+			.findOne({'username':req.body.username},function(err,user){
+				if (err) { throw err; }
+					console.log(JSON.stringify(user));
+					if(user && user.password==req.body.password){
+						var data = {
+							username: req.body.username
+						}
+						console.log("User found");
+						res.send(data);
+						
+					}
+					else{
+						console.log("User not found");
 						res.send(null);
 					}
 			});

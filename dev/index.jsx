@@ -170,6 +170,31 @@ class App extends React.Component{
                 username: j.username,
                 });
             }
+            else{
+                
+            }
+
+        });
+    }
+    loginHandler = (username,password) =>{
+        fetch('/login', {
+        method: 'POST',
+        headers: {"Content-Type": "application/json"},
+        credentials: 'include',
+        body: JSON.stringify({"username":username,
+            "password":password
+        })
+        }).then(function(data) {
+            return data.json();
+        }).then((j) =>{
+            if(j){
+                this.setState({logged: true,
+                username: j.username,
+                });
+            }
+            else{
+                
+            }
 
         });
     }
@@ -205,7 +230,7 @@ class App extends React.Component{
                             <p className='roomName'>{this.state.room}</p>
                             <p className='username'>{this.state.username}</p>
                             </div>
-                            <Login logged={this.state.logged} logoutHandler={this.logoutHandler} signUpHandler={this.signUpHandler}/>
+                            <Login logged={this.state.logged} logoutHandler={this.logoutHandler} loginHandler={this.loginHandler} signUpHandler={this.signUpHandler}/>
                         </div>
                         <div className='roomControl'>
                             <RoomControl rooms={this.state.rooms} joinRoomHandler={this.joinRoomHandler} newRoomWindowHandler={this.newRoomWindowHandler}/>
@@ -252,6 +277,12 @@ class Login extends React.Component{
             passwordInput: ''
         });
     }
+    login = () =>{
+        this.props.loginHandler(this.state.usernameInput,this.state.passwordInput);
+        this.setState({usernameInput: '',
+            passwordInput: ''
+        });
+    }
     render(){
         if(this.props.logged){
             return(
@@ -269,7 +300,7 @@ class Login extends React.Component{
                 <input type="text" placeholder="Username" value={this.state.usernameInput} onChange={this.handleUsernameChange}/>
                 <input type="text" placeholder="Password" value={this.state.passwordInput} onChange={this.handlePasswordChange}/>
                 <div className='loginButtonContainer'>
-                    <button className='loginButton'>Login</button>
+                    <button className='loginButton' onClick={this.login}>Login</button>
                     <button className='signupButton' onClick={this.signUp}>SignUp</button>
                 </div>
             </div>

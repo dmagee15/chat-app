@@ -4801,7 +4801,26 @@ var App = function (_React$Component) {
                     _this.setState({ logged: true,
                         username: j.username
                     });
-                }
+                } else {}
+            });
+        };
+
+        _this.loginHandler = function (username, password) {
+            fetch('/login', {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                credentials: 'include',
+                body: JSON.stringify({ "username": username,
+                    "password": password
+                })
+            }).then(function (data) {
+                return data.json();
+            }).then(function (j) {
+                if (j) {
+                    _this.setState({ logged: true,
+                        username: j.username
+                    });
+                } else {}
             });
         };
 
@@ -4955,7 +4974,7 @@ var App = function (_React$Component) {
                                         this.state.username
                                     )
                                 ),
-                                _react2.default.createElement(Login, { logged: this.state.logged, logoutHandler: this.logoutHandler, signUpHandler: this.signUpHandler })
+                                _react2.default.createElement(Login, { logged: this.state.logged, logoutHandler: this.logoutHandler, loginHandler: this.loginHandler, signUpHandler: this.signUpHandler })
                             ),
                             _react2.default.createElement(
                                 "div",
@@ -5010,6 +5029,13 @@ var Login = function (_React$Component2) {
             });
         };
 
+        _this3.login = function () {
+            _this3.props.loginHandler(_this3.state.usernameInput, _this3.state.passwordInput);
+            _this3.setState({ usernameInput: '',
+                passwordInput: ''
+            });
+        };
+
         _this3.state = {
             usernameInput: '',
             passwordInput: ''
@@ -5046,7 +5072,7 @@ var Login = function (_React$Component2) {
                     { className: "loginButtonContainer" },
                     _react2.default.createElement(
                         "button",
-                        { className: "loginButton" },
+                        { className: "loginButton", onClick: this.login },
                         "Login"
                     ),
                     _react2.default.createElement(
