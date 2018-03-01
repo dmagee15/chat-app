@@ -49,6 +49,15 @@ module.exports = function (app, yahooFinance, io) {
 			});
     	
     });
+    app.post('/logout', function(req,res){
+
+						var guestName = "Guest"+Math.floor(Math.random()*10000);
+						var result = {
+							username: guestName
+						}
+						res.send(result);
+    	
+    });
 	io.on('connection', function(client){
     console.log("IO CLIENT CONNECTED");
 //    Room.find({}).remove().exec();

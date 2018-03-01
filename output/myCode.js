@@ -4826,6 +4826,21 @@ var App = function (_React$Component) {
 
         _this.logoutHandler = function () {
             console.log("Logout");
+            fetch('/logout', {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                credentials: 'include',
+                body: JSON.stringify({ "username": _this.state.username
+                })
+            }).then(function (data) {
+                return data.json();
+            }).then(function (j) {
+                if (j) {
+                    _this.setState({ logged: false,
+                        username: j.username
+                    });
+                } else {}
+            });
             //        socket.emit('logout', data);
         };
 
@@ -4939,7 +4954,21 @@ var App = function (_React$Component) {
                     );
                 });
             }
-
+            if (this.state.loaded == false) {
+                return _react2.default.createElement(
+                    "div",
+                    { style: { margin: 0, padding: 0, overflow: 'hidden', textAlign: 'center' } },
+                    _react2.default.createElement(
+                        "div",
+                        { className: "loading" },
+                        _react2.default.createElement(
+                            "h1",
+                            null,
+                            "Loading"
+                        )
+                    )
+                );
+            }
             return _react2.default.createElement(
                 "div",
                 { style: { margin: 0, padding: 0, overflow: 'hidden', textAlign: 'center' } },

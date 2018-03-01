@@ -200,6 +200,25 @@ class App extends React.Component{
     }
     logoutHandler = () =>{
         console.log("Logout");
+        fetch('/logout', {
+        method: 'POST',
+        headers: {"Content-Type": "application/json"},
+        credentials: 'include',
+        body: JSON.stringify({"username":this.state.username
+        })
+        }).then(function(data) {
+            return data.json();
+        }).then((j) =>{
+            if(j){
+                this.setState({logged: false,
+                username: j.username,
+                });
+            }
+            else{
+                
+            }
+
+        });
 //        socket.emit('logout', data);
     }
     enterHandler = (event) =>{
@@ -216,7 +235,16 @@ class App extends React.Component{
                 <p key={index}>{message.username}: {message.message}</p>
                 );
             }
-
+            if(this.state.loaded==false){
+                return (
+            <div style={{margin:0,padding:0,overflow:'hidden',textAlign:'center'}}>
+                <div className='loading'>
+                    <h1>Loading</h1>
+                </div>
+            
+          </div>
+            )
+            }
             return (
            <div style={{margin:0,padding:0,overflow:'hidden',textAlign:'center'}}>
             <div className='ChatApp'>

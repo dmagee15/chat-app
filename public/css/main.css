@@ -207,11 +207,24 @@ span {
 	height: 600px;
 	margin:25px 0px 0px 0px;
 	padding:0;
-	background-color:red;
 	display:inline-block;
 	text-align: left;
 	overflow:hidden;
 	position:relative;
+}
+.loading{
+	width: 800px;
+	height: 600px;
+	margin:25px 0px 0px 0px;
+	padding:0;
+	display:inline-block;
+	text-align: center;
+	overflow:hidden;
+	position:relative;
+	border: 1px solid black;
+}
+.loading h1{
+	padding-top: 250px;
 }
 .nonInput{
 	width: 798px;
