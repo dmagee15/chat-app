@@ -5150,11 +5150,19 @@ var RoomControl = function (_React$Component3) {
             _this4.setState({ roomSelect: '' });
         };
 
-        _this4.submitSearch = function () {};
+        _this4.searchHandler = function () {
+            _this4.setState({
+                searchSubmit: _this4.state.searchInput
+            }, function () {
+                this.setState({ searchInput: '' });
+            });
+        };
 
         _this4.state = {
             roomSelect: '',
-            roomData: ['Room One']
+            roomData: ['Room One'],
+            searchInput: '',
+            searchSubmit: ''
         };
         return _this4;
     }
@@ -5164,7 +5172,15 @@ var RoomControl = function (_React$Component3) {
         value: function render() {
             var _this5 = this;
 
-            var display = this.props.rooms.map(function (roomName, index) {
+            var refinedArray = [];
+            var length = this.props.rooms.length;
+            var regex = new RegExp(this.state.searchSubmit, 'i');
+            for (var x = 0; x < length; x++) {
+                if (regex.test(this.props.rooms[x])) {
+                    refinedArray.push(this.props.rooms[x]);
+                }
+            }
+            var display = refinedArray.map(function (roomName, index) {
                 if (roomName == _this5.state.roomSelect) {
                     return _react2.default.createElement(
                         "button",
@@ -5203,7 +5219,7 @@ var RoomControl = function (_React$Component3) {
                         { className: "loginButtonContainer" },
                         _react2.default.createElement(
                             "button",
-                            { className: "signupButton" },
+                            { className: "signupButton", onClick: this.searchHandler },
                             "Search"
                         ),
                         _react2.default.createElement(

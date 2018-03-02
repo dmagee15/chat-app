@@ -341,7 +341,9 @@ class RoomControl extends React.Component{
         super(props);
     this.state = {
         roomSelect: '',
-        roomData: ['Room One']
+        roomData: ['Room One'],
+        searchInput: '',
+        searchSubmit: ''
     }
     }
     handleRoomSelect = (roomName) => {
@@ -366,11 +368,23 @@ class RoomControl extends React.Component{
         this.props.joinRoomHandler(this.state.roomSelect);
         this.setState({roomSelect: ''});
     }
-    submitSearch = () => {
-
+    searchHandler = () => {
+        this.setState({
+            searchSubmit: this.state.searchInput
+        }, function(){
+            this.setState({searchInput:''});
+        });
     }
     render(){
-        var display = this.props.rooms.map((roomName,index) => {
+        var refinedArray = [];
+        var length = this.props.rooms.length;
+        var regex = new RegExp(this.state.searchSubmit,'i');
+        for(var x=0;x<length;x++){
+            if(regex.test(this.props.rooms[x])){
+                    refinedArray.push(this.props.rooms[x]);
+            }
+        }
+        var display = refinedArray.map((roomName,index) => {
                 if(roomName==this.state.roomSelect){
                     return(
                     <button className='roomElement' key={roomName} style={{backgroundColor:'lightblue'}} onClick={()=>{this.handleRoomSelect(roomName)}}>
@@ -391,7 +405,7 @@ class RoomControl extends React.Component{
                 <div className='searchContainer'>
                     <input type="text" placeholder="Search Rooms..." onChange={this.handleSearchInputChange} onKeyPress={this.handleSearchKeyPress} value={this.state.searchInput}/>
                     <div className='loginButtonContainer'>
-                        <button className='signupButton'>Search</button>
+                        <button className='signupButton' onClick={this.searchHandler}>Search</button>
                         <button className='signupButton' onClick={this.props.newRoomWindowHandler}>New</button>
                 </div>
                 </div>
