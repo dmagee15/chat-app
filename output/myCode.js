@@ -4949,6 +4949,14 @@ var App = function (_React$Component) {
                         "p",
                         { key: index },
                         message.username,
+                        " ",
+                        _react2.default.createElement(
+                            "span",
+                            { style: { color: '#CECECE' } },
+                            "(",
+                            message.date,
+                            ")"
+                        ),
                         ": ",
                         message.message
                     );

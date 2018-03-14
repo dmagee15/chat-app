@@ -232,7 +232,7 @@ class App extends React.Component{
             var display = null;
             if(this.state.messagedata!=null){
                 var display = this.state.messagedata.map((message,index) => 
-                <p key={index}>{message.username}: {message.message}</p>
+                <p key={index}>{message.username} <span style={{color:'#CECECE'}}>({message.date})</span>: {message.message}</p>
                 );
             }
             if(this.state.loaded==false){
