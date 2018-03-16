@@ -4952,7 +4952,7 @@ var App = function (_React$Component) {
                         " ",
                         _react2.default.createElement(
                             "span",
-                            { style: { color: '#CECECE' } },
+                            { style: { color: '#CECECE', fontWeight: '100' } },
                             "(",
                             message.date,
                             ")"
