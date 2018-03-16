@@ -144,7 +144,6 @@ class App extends React.Component{
     }
     
     submitMessage = () => {
-            console.log('submitmessage');
             var result = {
                 messagedata:{
                     username: this.state.username,

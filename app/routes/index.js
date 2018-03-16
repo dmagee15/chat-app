@@ -87,9 +87,14 @@ module.exports = function (app, yahooFinance, io) {
 							roomArray.push(rooms[x].name);
 						}
 						var guestName = "Guest"+Math.floor(Math.random()*10000);
+						var messageSelection = mainroom.messages;
+						var numMessages = mainroom.messages.length;
+						if(numMessages>100){
+							messageSelection = mainroom.messages.slice(numMessages-100,numMessages);
+						}
 						var result = {
 							username: guestName,
-							messages: mainroom.messages,
+							messages: messageSelection,
 							rooms: roomArray
 						}
 						io.sockets.in('main').emit('initial', result);
@@ -105,8 +110,13 @@ module.exports = function (app, yahooFinance, io) {
         Room
 			.findOneAndUpdate({'name':data.room},{$push: {messages: data.messagedata}},{new:true}, function(err,room){
 				if (err) { throw err; }
+					var messageSelection = room.messages;
+						var numMessages = room.messages.length;
+						if(numMessages>100){
+							messageSelection = room.messages.slice(numMessages-100,numMessages);
+						}
 					var result = {
-						messages: room.messages
+						messages: messageSelection
 					}
 					io.sockets.in(data.room).emit('messageUpdate', result);
 			});
@@ -160,9 +170,14 @@ module.exports = function (app, yahooFinance, io) {
         Room
 			.findOne({'name':data.roomToJoin},function(err,room){
 				if (err) { throw err; }
+				var messageSelection = room.messages;
+						var numMessages = room.messages.length;
+						if(numMessages>100){
+							messageSelection = room.messages.slice(numMessages-100,numMessages);
+						}
 					var result = {
 						room: data.roomToJoin,
-						messages: room.messages
+						messages: messageSelection
 					}
 					io.sockets.in(data.roomToJoin).emit('roomJoined', result);
 			});

@@ -4741,9 +4741,11 @@ var App = function (_React$Component) {
         };
 
         _this.handleInput = function (event) {
-            _this.setState({
-                input: event.target.value
-            });
+            if (event.key != 'Enter') {
+                _this.setState({
+                    input: event.target.value
+                });
+            }
         };
 
         _this.handleSubmit = function (event) {
@@ -4775,7 +4777,6 @@ var App = function (_React$Component) {
         };
 
         _this.submitMessage = function () {
-            console.log('submitmessage');
             var result = {
                 messagedata: {
                     username: _this.state.username,
