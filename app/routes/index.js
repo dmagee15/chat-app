@@ -98,7 +98,11 @@ module.exports = function (app, yahooFinance, io) {
     
 	client.on('add', function(data){
 		var time = new Date();
-		data.messagedata.date = time.getMonth()+"-"+time.getDate()+" "+time.getHours()+":"+time.getMinutes();
+		var hours = ""+time.getHours();
+		hours = (hours.length==1)?"0"+hours:hours;
+		var minutes = ""+time.getMinutes();
+		minutes = (minutes.length==1)?"0"+minutes:minutes;
+		data.messagedata.date = (time.getMonth()+1)+"-"+time.getDate()+" "+hours+":"+minutes;
 
         Room
 			.findOneAndUpdate({'name':data.room},{$push: {messages: data.messagedata}},{new:true}, function(err,room){
