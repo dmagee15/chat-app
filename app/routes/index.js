@@ -70,7 +70,7 @@ module.exports = function (app, yahooFinance, io) {
 							username: guestName,
 							messages: []
 						}
-						io.sockets.in('main').emit('initial', result);
+						client.emit('initial', result);
 				}
 				else{
 					Room.findOne({'name':'main'}, function(err,mainroom){
@@ -91,7 +91,7 @@ module.exports = function (app, yahooFinance, io) {
 							messages: messageSelection,
 							rooms: roomArray
 						}
-						io.sockets.in('main').emit('initial', result);
+						client.emit('initial', result);
 					});
 				}
 			});
