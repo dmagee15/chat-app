@@ -372,7 +372,7 @@ class RoomControl extends React.Component{
     }
     render(){
         var refinedArray = [];
-        var length = this.props.rooms.length;
+        var length = (this.props.rooms)?this.props.rooms.length:0;
         var regex = new RegExp(this.state.searchSubmit,'i');
         for(var x=0;x<length;x++){
             if(regex.test(this.props.rooms[x])){

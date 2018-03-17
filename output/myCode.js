@@ -5176,7 +5176,7 @@ var RoomControl = function (_React$Component3) {
             var _this5 = this;
 
             var refinedArray = [];
-            var length = this.props.rooms.length;
+            var length = this.props.rooms ? this.props.rooms.length : 0;
             var regex = new RegExp(this.state.searchSubmit, 'i');
             for (var x = 0; x < length; x++) {
                 if (regex.test(this.props.rooms[x])) {
