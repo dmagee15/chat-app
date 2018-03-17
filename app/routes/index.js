@@ -55,7 +55,7 @@ module.exports = function (app, yahooFinance, io) {
     	
     });
 	io.on('connection', function(client){
-    Room.find({}).remove().exec();
+//    Room.find({}).remove().exec();
 	client.join('main');
     Room
 				.find({}, function (err, rooms) {
