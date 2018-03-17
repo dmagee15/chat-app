@@ -29,7 +29,6 @@ class App extends React.Component{
     componentDidMount() {
         
         socket.on('initial', (j) => {
-		        console.log(j.messages);
 		        if(j.messages!=null){
 		            this.setState({
                     messagedata: j.messages,
@@ -49,7 +48,6 @@ class App extends React.Component{
         });
         
         socket.on('messageUpdate', (j) => {
-		        console.log(j.messages);
 		        if(j.messages!=null){
 		            this.setState({
                     messagedata: j.messages,
@@ -95,7 +93,6 @@ class App extends React.Component{
         
     }
     submitNewRoomHandler = (newRoomName) =>{
-        console.log(newRoomName);
         socket.emit('addNewRoom', newRoomName);
     }
     newRoomWindowHandler = () =>{
@@ -198,7 +195,6 @@ class App extends React.Component{
         });
     }
     logoutHandler = () =>{
-        console.log("Logout");
         fetch('/logout', {
         method: 'POST',
         headers: {"Content-Type": "application/json"},
@@ -222,12 +218,12 @@ class App extends React.Component{
     }
     enterHandler = (event) =>{
         if(event.key=='Enter'){
+            event.preventDefault();
             this.handleSubmit();
         }
     }
     
    render(){
-            console.log
             var display = null;
             if(this.state.messagedata!=null){
                 var display = this.state.messagedata.map((message,index) => 

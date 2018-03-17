@@ -380,7 +380,7 @@ span {
 .List{
 	height: 219px;
 	width: 100%;
-	
+	overflow-y:scroll;
 }
 .List hr{
 	margin:0;

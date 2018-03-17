@@ -12,7 +12,6 @@ module.exports = function (app, yahooFinance, io) {
 			.findOne({'username':req.body.username},function(err,user){
 				if (err) { throw err; }
 					if(!user){
-						console.log("User not found");
 						var newUser = new User();
 						newUser.username = req.body.username;
 						newUser.password = req.body.password;
@@ -33,17 +32,14 @@ module.exports = function (app, yahooFinance, io) {
     	User
 			.findOne({'username':req.body.username},function(err,user){
 				if (err) { throw err; }
-					console.log(JSON.stringify(user));
 					if(user && user.password==req.body.password){
 						var data = {
 							username: req.body.username
 						}
-						console.log("User found");
 						res.send(data);
 						
 					}
 					else{
-						console.log("User not found");
 						res.send(null);
 					}
 			});
@@ -59,7 +55,6 @@ module.exports = function (app, yahooFinance, io) {
     	
     });
 	io.on('connection', function(client){
-    console.log("IO CLIENT CONNECTED");
 //    Room.find({}).remove().exec();
 	client.join('main');
     Room
@@ -80,7 +75,6 @@ module.exports = function (app, yahooFinance, io) {
 				else{
 					Room.findOne({'name':'main'}, function(err,mainroom){
 						if(err) throw err;
-						console.log(JSON.stringify(mainroom));
 						var length = rooms.length;
 						var roomArray = [];
 						for(var x=0;x<length;x++){
@@ -105,8 +99,7 @@ module.exports = function (app, yahooFinance, io) {
 	client.on('add', function(data){
 		var time = new Date();
 		data.messagedata.date = time.getMonth()+"-"+time.getDate()+" "+time.getHours()+":"+time.getMinutes();
-		console.log("Date: "+data.messagedata.date);
-		
+
         Room
 			.findOneAndUpdate({'name':data.room},{$push: {messages: data.messagedata}},{new:true}, function(err,room){
 				if (err) { throw err; }
@@ -129,14 +122,12 @@ module.exports = function (app, yahooFinance, io) {
         Room
 			.find({}, function(err,rooms){
 				if (err) { throw err; }
-				console.log(rooms);
 				var duplicate = false;
 				var length = rooms.length;
 				var roomArray = [];
 				for(var x=0;x<length;x++){
 					roomArray.push(rooms[x].name);
 					if(rooms[x].name==newRoomName){
-						console.log("Room already exists.");
 						duplicate = true;
 					}
 				}
@@ -191,7 +182,6 @@ module.exports = function (app, yahooFinance, io) {
 			.findOne({'username':data.username},function(err,user){
 				if (err) { throw err; }
 					if(!user){
-						console.log("User not found");
 						var newUser = new User();
 						newUser.username = data.username;
 						newUser.password = data.password;

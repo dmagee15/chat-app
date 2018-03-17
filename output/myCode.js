@@ -4723,7 +4723,6 @@ var App = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
         _this.submitNewRoomHandler = function (newRoomName) {
-            console.log(newRoomName);
             socket.emit('addNewRoom', newRoomName);
         };
 
@@ -4741,11 +4740,9 @@ var App = function (_React$Component) {
         };
 
         _this.handleInput = function (event) {
-            if (event.key != 'Enter') {
-                _this.setState({
-                    input: event.target.value
-                });
-            }
+            _this.setState({
+                input: event.target.value
+            });
         };
 
         _this.handleSubmit = function (event) {
@@ -4826,7 +4823,6 @@ var App = function (_React$Component) {
         };
 
         _this.logoutHandler = function () {
-            console.log("Logout");
             fetch('/logout', {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
@@ -4847,6 +4843,7 @@ var App = function (_React$Component) {
 
         _this.enterHandler = function (event) {
             if (event.key == 'Enter') {
+                event.preventDefault();
                 _this.handleSubmit();
             }
         };
@@ -4874,7 +4871,6 @@ var App = function (_React$Component) {
             var _this2 = this;
 
             socket.on('initial', function (j) {
-                console.log(j.messages);
                 if (j.messages != null) {
                     _this2.setState({
                         messagedata: j.messages,
@@ -4894,7 +4890,6 @@ var App = function (_React$Component) {
             });
 
             socket.on('messageUpdate', function (j) {
-                console.log(j.messages);
                 if (j.messages != null) {
                     _this2.setState({
                         messagedata: j.messages,
@@ -4942,7 +4937,6 @@ var App = function (_React$Component) {
     }, {
         key: "render",
         value: function render() {
-            console.log;
             var display = null;
             if (this.state.messagedata != null) {
                 var display = this.state.messagedata.map(function (message, index) {
