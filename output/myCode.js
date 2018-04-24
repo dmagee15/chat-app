@@ -4804,22 +4804,28 @@ var App = function (_React$Component) {
         };
 
         _this.loginHandler = function (username, password) {
-            fetch('/login', {
-                method: 'POST',
-                headers: { "Content-Type": "application/json" },
-                credentials: 'include',
-                body: JSON.stringify({ "username": username,
-                    "password": password
-                })
-            }).then(function (data) {
-                return data.json();
-            }).then(function (j) {
-                if (j) {
-                    _this.setState({ logged: true,
-                        username: j.username
-                    });
-                } else {}
-            });
+            if (username == '' || password == '') {
+                _this.setState({ errorContent: 'Both the username and password fields must be filled to login.',
+                    errorDisplay: true
+                });
+            } else {
+                fetch('/login', {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    credentials: 'include',
+                    body: JSON.stringify({ "username": username,
+                        "password": password
+                    })
+                }).then(function (data) {
+                    return data.json();
+                }).then(function (j) {
+                    if (j) {
+                        _this.setState({ logged: true,
+                            username: j.username
+                        });
+                    } else {}
+                });
+            }
         };
 
         _this.logoutHandler = function () {
@@ -4860,7 +4866,9 @@ var App = function (_React$Component) {
             logged: false,
             room: 'main',
             rooms: ['main'],
-            newRoomWindow: false
+            newRoomWindow: false,
+            errorDisplay: false,
+            errorContent: ''
         };
         return _this;
     }
@@ -5025,7 +5033,8 @@ var App = function (_React$Component) {
                             "Submit"
                         )
                     ),
-                    _react2.default.createElement(NewRoom, { submitNewRoomHandler: this.submitNewRoomHandler, newRoomWindow: this.state.newRoomWindow, newRoomWindowHandler: this.newRoomWindowHandler })
+                    _react2.default.createElement(NewRoom, { submitNewRoomHandler: this.submitNewRoomHandler, newRoomWindow: this.state.newRoomWindow, newRoomWindowHandler: this.newRoomWindowHandler }),
+                    _react2.default.createElement(ErrorWindow, { content: this.state.errorContent, display: this.state.errorDisplay })
                 )
             );
         }
@@ -5034,45 +5043,81 @@ var App = function (_React$Component) {
     return App;
 }(_react2.default.Component);
 
-var Login = function (_React$Component2) {
-    _inherits(Login, _React$Component2);
+var ErrorWindow = function (_React$Component2) {
+    _inherits(ErrorWindow, _React$Component2);
+
+    function ErrorWindow(props) {
+        _classCallCheck(this, ErrorWindow);
+
+        var _this3 = _possibleConstructorReturn(this, (ErrorWindow.__proto__ || Object.getPrototypeOf(ErrorWindow)).call(this, props));
+
+        _this3.state = {
+            content: ''
+        };
+        return _this3;
+    }
+
+    _createClass(ErrorWindow, [{
+        key: "render",
+        value: function render() {
+            if (this.props.display) {
+                return _react2.default.createElement(
+                    "div",
+                    { className: "errorWindow" },
+                    _react2.default.createElement(
+                        "p",
+                        null,
+                        this.props.content
+                    )
+                );
+            } else {
+                return null;
+            }
+        }
+    }]);
+
+    return ErrorWindow;
+}(_react2.default.Component);
+
+var Login = function (_React$Component3) {
+    _inherits(Login, _React$Component3);
 
     function Login(props) {
         _classCallCheck(this, Login);
 
-        var _this3 = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this, props));
+        var _this4 = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this, props));
 
-        _this3.handleUsernameChange = function (event) {
-            _this3.setState({
+        _this4.handleUsernameChange = function (event) {
+            _this4.setState({
                 usernameInput: event.target.value
             });
         };
 
-        _this3.handlePasswordChange = function (event) {
-            _this3.setState({
+        _this4.handlePasswordChange = function (event) {
+            _this4.setState({
                 passwordInput: event.target.value
             });
         };
 
-        _this3.signUp = function () {
-            _this3.props.signUpHandler(_this3.state.usernameInput, _this3.state.passwordInput);
-            _this3.setState({ usernameInput: '',
+        _this4.signUp = function () {
+            _this4.props.signUpHandler(_this4.state.usernameInput, _this4.state.passwordInput);
+            _this4.setState({ usernameInput: '',
                 passwordInput: ''
             });
         };
 
-        _this3.login = function () {
-            _this3.props.loginHandler(_this3.state.usernameInput, _this3.state.passwordInput);
-            _this3.setState({ usernameInput: '',
+        _this4.login = function () {
+            _this4.props.loginHandler(_this4.state.usernameInput, _this4.state.passwordInput);
+            _this4.setState({ usernameInput: '',
                 passwordInput: ''
             });
         };
 
-        _this3.state = {
+        _this4.state = {
             usernameInput: '',
             passwordInput: ''
         };
-        return _this3;
+        return _this4;
     }
 
     _createClass(Login, [{
@@ -5120,60 +5165,60 @@ var Login = function (_React$Component2) {
     return Login;
 }(_react2.default.Component);
 
-var RoomControl = function (_React$Component3) {
-    _inherits(RoomControl, _React$Component3);
+var RoomControl = function (_React$Component4) {
+    _inherits(RoomControl, _React$Component4);
 
     function RoomControl(props) {
         _classCallCheck(this, RoomControl);
 
-        var _this4 = _possibleConstructorReturn(this, (RoomControl.__proto__ || Object.getPrototypeOf(RoomControl)).call(this, props));
+        var _this5 = _possibleConstructorReturn(this, (RoomControl.__proto__ || Object.getPrototypeOf(RoomControl)).call(this, props));
 
-        _this4.handleRoomSelect = function (roomName) {
-            if (roomName == _this4.state.roomSelect) {
-                _this4.setState({ roomSelect: '' });
+        _this5.handleRoomSelect = function (roomName) {
+            if (roomName == _this5.state.roomSelect) {
+                _this5.setState({ roomSelect: '' });
             } else {
-                _this4.setState({ roomSelect: roomName });
+                _this5.setState({ roomSelect: roomName });
             }
         };
 
-        _this4.handleSearchInputChange = function (event) {
-            _this4.setState({
+        _this5.handleSearchInputChange = function (event) {
+            _this5.setState({
                 searchInput: event.target.value
             });
         };
 
-        _this4.handleSearchKeyPress = function (event) {
+        _this5.handleSearchKeyPress = function (event) {
             if (event.key == 'Enter') {
-                _this4.submitSearch();
+                _this5.submitSearch();
             }
         };
 
-        _this4.joinRoom = function () {
-            _this4.props.joinRoomHandler(_this4.state.roomSelect);
-            _this4.setState({ roomSelect: '' });
+        _this5.joinRoom = function () {
+            _this5.props.joinRoomHandler(_this5.state.roomSelect);
+            _this5.setState({ roomSelect: '' });
         };
 
-        _this4.searchHandler = function () {
-            _this4.setState({
-                searchSubmit: _this4.state.searchInput
+        _this5.searchHandler = function () {
+            _this5.setState({
+                searchSubmit: _this5.state.searchInput
             }, function () {
                 this.setState({ searchInput: '' });
             });
         };
 
-        _this4.state = {
+        _this5.state = {
             roomSelect: '',
             roomData: ['Room One'],
             searchInput: '',
             searchSubmit: ''
         };
-        return _this4;
+        return _this5;
     }
 
     _createClass(RoomControl, [{
         key: "render",
         value: function render() {
-            var _this5 = this;
+            var _this6 = this;
 
             var refinedArray = [];
             var length = this.props.rooms ? this.props.rooms.length : 0;
@@ -5184,11 +5229,11 @@ var RoomControl = function (_React$Component3) {
                 }
             }
             var display = refinedArray.map(function (roomName, index) {
-                if (roomName == _this5.state.roomSelect) {
+                if (roomName == _this6.state.roomSelect) {
                     return _react2.default.createElement(
                         "button",
                         { className: "roomElement", key: roomName, style: { backgroundColor: 'lightblue' }, onClick: function onClick() {
-                                _this5.handleRoomSelect(roomName);
+                                _this6.handleRoomSelect(roomName);
                             } },
                         _react2.default.createElement(
                             "p",
@@ -5200,7 +5245,7 @@ var RoomControl = function (_React$Component3) {
                     return _react2.default.createElement(
                         "button",
                         { className: "roomElement", key: roomName, onClick: function onClick() {
-                                _this5.handleRoomSelect(roomName);
+                                _this6.handleRoomSelect(roomName);
                             } },
                         _react2.default.createElement(
                             "p",
@@ -5257,22 +5302,22 @@ var RoomControl = function (_React$Component3) {
     return RoomControl;
 }(_react2.default.Component);
 
-var StockBox = function (_React$Component4) {
-    _inherits(StockBox, _React$Component4);
+var StockBox = function (_React$Component5) {
+    _inherits(StockBox, _React$Component5);
 
     function StockBox(props) {
         _classCallCheck(this, StockBox);
 
-        var _this6 = _possibleConstructorReturn(this, (StockBox.__proto__ || Object.getPrototypeOf(StockBox)).call(this, props));
+        var _this7 = _possibleConstructorReturn(this, (StockBox.__proto__ || Object.getPrototypeOf(StockBox)).call(this, props));
 
-        _this6.delete = function () {
-            _this6.setState({ delete: true }, _this6.props.handleButtonDelete(_this6.props.index));
+        _this7.delete = function () {
+            _this7.setState({ delete: true }, _this7.props.handleButtonDelete(_this7.props.index));
         };
 
-        _this6.state = {
+        _this7.state = {
             delete: false
         };
-        return _this6;
+        return _this7;
     }
 
     _createClass(StockBox, [{
@@ -5335,8 +5380,8 @@ var StockBox = function (_React$Component4) {
     return StockBox;
 }(_react2.default.Component);
 
-var InputSection = function (_React$Component5) {
-    _inherits(InputSection, _React$Component5);
+var InputSection = function (_React$Component6) {
+    _inherits(InputSection, _React$Component6);
 
     function InputSection(props) {
         _classCallCheck(this, InputSection);
@@ -5404,8 +5449,8 @@ var InputSection = function (_React$Component5) {
     return InputSection;
 }(_react2.default.Component);
 
-var DeleteSection = function (_React$Component6) {
-    _inherits(DeleteSection, _React$Component6);
+var DeleteSection = function (_React$Component7) {
+    _inherits(DeleteSection, _React$Component7);
 
     function DeleteSection(props) {
         _classCallCheck(this, DeleteSection);
@@ -5437,8 +5482,8 @@ var DeleteSection = function (_React$Component6) {
     return DeleteSection;
 }(_react2.default.Component);
 
-var SampleChart = function (_React$Component7) {
-    _inherits(SampleChart, _React$Component7);
+var SampleChart = function (_React$Component8) {
+    _inherits(SampleChart, _React$Component8);
 
     function SampleChart() {
         _classCallCheck(this, SampleChart);
@@ -5478,33 +5523,33 @@ var SampleChart = function (_React$Component7) {
     return SampleChart;
 }(_react2.default.Component);
 
-var NewRoom = function (_React$Component8) {
-    _inherits(NewRoom, _React$Component8);
+var NewRoom = function (_React$Component9) {
+    _inherits(NewRoom, _React$Component9);
 
     function NewRoom(props) {
         _classCallCheck(this, NewRoom);
 
-        var _this10 = _possibleConstructorReturn(this, (NewRoom.__proto__ || Object.getPrototypeOf(NewRoom)).call(this, props));
+        var _this11 = _possibleConstructorReturn(this, (NewRoom.__proto__ || Object.getPrototypeOf(NewRoom)).call(this, props));
 
-        _this10.handleNameChange = function (event) {
-            _this10.setState({
+        _this11.handleNameChange = function (event) {
+            _this11.setState({
                 nameInput: event.target.value
             });
         };
 
-        _this10.handleSubmit = function () {
-            _this10.setState({ nameSubmit: _this10.state.nameInput,
+        _this11.handleSubmit = function () {
+            _this11.setState({ nameSubmit: _this11.state.nameInput,
                 nameInput: ''
             }, function () {
-                _this10.props.submitNewRoomHandler(_this10.state.nameSubmit);_this10.props.newRoomWindowHandler();
+                _this11.props.submitNewRoomHandler(_this11.state.nameSubmit);_this11.props.newRoomWindowHandler();
             });
         };
 
-        _this10.state = {
+        _this11.state = {
             nameInput: '',
             nameSubmit: ''
         };
-        return _this10;
+        return _this11;
     }
 
     _createClass(NewRoom, [{
@@ -5546,8 +5591,8 @@ var NewRoom = function (_React$Component8) {
     return NewRoom;
 }(_react2.default.Component);
 
-var ProjectInfo = function (_React$Component9) {
-    _inherits(ProjectInfo, _React$Component9);
+var ProjectInfo = function (_React$Component10) {
+    _inherits(ProjectInfo, _React$Component10);
 
     function ProjectInfo(props) {
         _classCallCheck(this, ProjectInfo);

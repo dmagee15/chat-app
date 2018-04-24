@@ -22,7 +22,9 @@ class App extends React.Component{
         logged: false,
         room: 'main',
         rooms: ['main'],
-        newRoomWindow: false
+        newRoomWindow: false,
+        errorDisplay: false,
+        errorContent: ''
         };
     }
     
@@ -173,16 +175,22 @@ class App extends React.Component{
         });
     }
     loginHandler = (username,password) =>{
-        fetch('/login', {
-        method: 'POST',
-        headers: {"Content-Type": "application/json"},
-        credentials: 'include',
-        body: JSON.stringify({"username":username,
+        if(username=='' || password==''){
+            this.setState({errorContent: 'Both the username and password fields must be filled to login.',
+                errorDisplay: true
+            });
+        }
+        else{
+            fetch('/login', {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            credentials: 'include',
+            body: JSON.stringify({"username":username,
             "password":password
-        })
-        }).then(function(data) {
-            return data.json();
-        }).then((j) =>{
+            })
+            }).then(function(data) {
+                return data.json();
+            }).then((j) =>{
             if(j){
                 this.setState({logged: true,
                 username: j.username,
@@ -191,8 +199,9 @@ class App extends React.Component{
             else{
                 
             }
-
-        });
+            });
+        }
+        
     }
     logoutHandler = () =>{
         fetch('/logout', {
@@ -265,6 +274,7 @@ class App extends React.Component{
                     <button onClick={this.handleSubmit}>Submit</button>
                 </div>
                 <NewRoom submitNewRoomHandler={this.submitNewRoomHandler} newRoomWindow={this.state.newRoomWindow} newRoomWindowHandler={this.newRoomWindowHandler}/>
+                <ErrorWindow content={this.state.errorContent} display={this.state.errorDisplay}/>
             </div>
             
           </div>
@@ -274,6 +284,27 @@ class App extends React.Component{
    }
       
    
+}
+
+class ErrorWindow extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            content: ''
+        }
+    }
+    render(){
+        if(this.props.display){
+            return (
+                <div className='errorWindow'>
+                    <p>{this.props.content}</p>
+                </div>
+            );
+        }
+        else{
+            return null;
+        }
+    }
 }
 
 class Login extends React.Component{

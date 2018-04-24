@@ -446,3 +446,20 @@ span {
 .loginHeaderContainer{
 	text-align:left;
 }
+.errorWindow{
+	background-color: #FFD9D9;
+      border-radius: 5;
+      width: 200px;
+      min-height: 100px;
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 100;
+      border: 1px solid darkred;
+}
+.errorWindow p{
+	color: darkred;
+}
