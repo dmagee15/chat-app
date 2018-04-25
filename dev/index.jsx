@@ -153,31 +153,43 @@ class App extends React.Component{
             socket.emit('add', result);
     }
     signUpHandler = (username,password) =>{
-        fetch('/signup', {
-        method: 'POST',
-        headers: {"Content-Type": "application/json"},
-        credentials: 'include',
-        body: JSON.stringify({"username":username,
-            "password":password
-        })
-        }).then(function(data) {
+        if(username=='' || password==''){
+            this.setState({errorContent: 'Both the username and password fields must be filled to sign up.',
+                errorDisplay: true
+            }, () => {
+                setTimeout(()=>{this.setState({errorContent: '', errorDisplay: false})}, 2500);
+            });
+        }
+        else{
+            fetch('/signup', {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            credentials: 'include',
+            body: JSON.stringify({"username":username,
+                "password":password
+            })
+            }).then(function(data) {
             return data.json();
-        }).then((j) =>{
-            if(j){
-                this.setState({logged: true,
-                username: j.username,
-                });
-            }
-            else{
+            }).then((j) =>{
+                if(j){
+                    this.setState({logged: true,
+                    username: j.username,
+                    });
+                }
+                else{
                 
-            }
+                }
 
-        });
+            });
+        }
+        
     }
     loginHandler = (username,password) =>{
         if(username=='' || password==''){
             this.setState({errorContent: 'Both the username and password fields must be filled to login.',
                 errorDisplay: true
+            }, () => {
+                setTimeout(()=>{this.setState({errorContent: '', errorDisplay: false})}, 2500);
             });
         }
         else{

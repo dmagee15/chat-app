@@ -450,7 +450,7 @@ span {
 	background-color: #FFD9D9;
       border-radius: 5;
       width: 200px;
-      min-height: 100px;
+      min-height: 40px;
       margin: 0;
       position: absolute;
       top: 50%;
@@ -462,4 +462,6 @@ span {
 }
 .errorWindow p{
 	color: darkred;
+	padding: 15px 0px 15px 0px;
+	margin: 0;
 }

@@ -4785,28 +4785,42 @@ var App = function (_React$Component) {
         };
 
         _this.signUpHandler = function (username, password) {
-            fetch('/signup', {
-                method: 'POST',
-                headers: { "Content-Type": "application/json" },
-                credentials: 'include',
-                body: JSON.stringify({ "username": username,
-                    "password": password
-                })
-            }).then(function (data) {
-                return data.json();
-            }).then(function (j) {
-                if (j) {
-                    _this.setState({ logged: true,
-                        username: j.username
-                    });
-                } else {}
-            });
+            if (username == '' || password == '') {
+                _this.setState({ errorContent: 'Both the username and password fields must be filled to sign up.',
+                    errorDisplay: true
+                }, function () {
+                    setTimeout(function () {
+                        _this.setState({ errorContent: '', errorDisplay: false });
+                    }, 2500);
+                });
+            } else {
+                fetch('/signup', {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    credentials: 'include',
+                    body: JSON.stringify({ "username": username,
+                        "password": password
+                    })
+                }).then(function (data) {
+                    return data.json();
+                }).then(function (j) {
+                    if (j) {
+                        _this.setState({ logged: true,
+                            username: j.username
+                        });
+                    } else {}
+                });
+            }
         };
 
         _this.loginHandler = function (username, password) {
             if (username == '' || password == '') {
                 _this.setState({ errorContent: 'Both the username and password fields must be filled to login.',
                     errorDisplay: true
+                }, function () {
+                    setTimeout(function () {
+                        _this.setState({ errorContent: '', errorDisplay: false });
+                    }, 2500);
                 });
             } else {
                 fetch('/login', {
